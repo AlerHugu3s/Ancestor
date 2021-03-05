@@ -4,6 +4,9 @@
     <Filter Include="Ancestor">
       <UniqueIdentifier>{04DF437A-F0AB-9E85-19C5-8C2D05F1D313}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ancestor\Events">
+      <UniqueIdentifier>{68FECFC5-D489-3D8A-DD9A-C07E49A5998A}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ancestor.h" />
@@ -15,6 +18,12 @@
     </ClInclude>
     <ClInclude Include="src\Ancestor\EntryPoint.h">
       <Filter>Ancestor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ancestor\Events\ApplicationEvent.h">
+      <Filter>Ancestor\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ancestor\Events\Event.h">
+      <Filter>Ancestor\Events</Filter>
     </ClInclude>
     <ClInclude Include="src\Ancestor\Log.h">
       <Filter>Ancestor</Filter>
