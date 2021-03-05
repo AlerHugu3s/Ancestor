@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "Ancestor/Application.h"
+#include "Ancestor/Log.h"
 
 //-----------Entry Point------------------
 #include "Ancestor/EntryPoint.h"
