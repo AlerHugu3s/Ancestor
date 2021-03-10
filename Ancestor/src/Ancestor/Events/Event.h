@@ -2,10 +2,6 @@
 
 #include "Ancestor/Core.h"
 
-#include <string>
-#include<functional>
-#include <sstream>
-
 namespace Ancestor
 {
 	enum class EventType

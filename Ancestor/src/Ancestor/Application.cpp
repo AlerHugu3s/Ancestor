@@ -1,12 +1,15 @@
+#include "acpch.h"
 #include "Application.h"
 
 #include "Ancestor/Events/ApplicationEvent.h"
 #include "Ancestor/Log.h"
 
+#include <GLFW/glfw3.h>
+
 namespace Ancestor {
 	Application::Application()
 	{
-
+		m_Window = std::unique_ptr<Window>(Window::Create());
 	}
 
 	Application::~Application()
@@ -16,19 +19,11 @@ namespace Ancestor {
 
 	void Application::Run()
 	{
-		WindowResizeEvent e(1200, 720);
-		
-		if (e.IsInCategory(EventCategoryApplication))
+		while (m_Running)
 		{
-			AC_TRACE(e);
-		}
-		if (e.IsInCategory(EventCategoryInput))
-		{
-			AC_TRACE(e);
-		}
-		while (true)
-		{
-
+			glClearColor(1, 0, 1, 1);
+			glClear(GL_COLOR_BUFFER_BIT);
+			m_Window->OnUpdate();
 		}
 	}
 }

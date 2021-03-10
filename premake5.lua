@@ -10,6 +10,11 @@ workspace "Ancestor"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+IncludeDir = {}
+IncludeDir["GLFW"] = "Ancestor/vendor/GLFW/include"
+
+include "Ancestor/vendor/GLFW"
+
 project "Ancestor"
     location "Ancestor"
     kind "SharedLib"
@@ -17,6 +22,9 @@ project "Ancestor"
 
     targetdir ("bin/"..outputdir.."/%{prj.name}")
     objdir ("bin-int/"..outputdir.."/%{prj.name}")
+
+    pchheader "acpch.h"
+    pchsource "Ancestor/src/acpch.cpp"
 
     files
     {
@@ -27,7 +35,14 @@ project "Ancestor"
     includedirs
     {
         "%{prj.name}/src",
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/vendor/spdlog/include",
+        "%{IncludeDir.GLFW}"
+    }
+
+    links
+    {
+        "GLFW",
+        "opengl32.lib"
     }
 
     filter "system:windows"

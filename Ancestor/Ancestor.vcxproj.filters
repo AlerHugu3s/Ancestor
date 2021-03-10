@@ -34,6 +34,9 @@
     <ClInclude Include="src\Ancestor\Log.h">
       <Filter>Ancestor</Filter>
     </ClInclude>
+    <ClInclude Include="src\acpch.h" />
+    <ClInclude Include="src\Ancestor\Window.h" />
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ancestor\Application.cpp">
@@ -42,5 +45,7 @@
     <ClCompile Include="src\Ancestor\Log.cpp">
       <Filter>Ancestor</Filter>
     </ClCompile>
+    <ClCompile Include="src\acpch.cpp" />
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>

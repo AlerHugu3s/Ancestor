@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include <sstream>
-
 namespace Ancestor {
 
 	class ANCESTOR_API WindowResizeEvent : public Event
