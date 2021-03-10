@@ -1,9 +1,10 @@
 #pragma once
 
-#include "../Core.h"
+#include "Ancestor/Core.h"
 
 #include <string>
 #include<functional>
+#include <sstream>
 
 namespace Ancestor
 {
@@ -73,4 +74,9 @@ namespace Ancestor
 	private:
 		Event& m_Event;
 	};
+
+	inline std::ostream& operator<<(std::ostream& os, const Event& e)
+	{
+		return os << e.ToString();
+	}
 }

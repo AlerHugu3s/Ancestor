@@ -25,6 +25,12 @@
     <ClInclude Include="src\Ancestor\Events\Event.h">
       <Filter>Ancestor\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ancestor\Events\KeyEvent.h">
+      <Filter>Ancestor\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ancestor\Events\MouseEvent.h">
+      <Filter>Ancestor\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ancestor\Log.h">
       <Filter>Ancestor</Filter>
     </ClInclude>

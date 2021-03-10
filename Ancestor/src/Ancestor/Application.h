@@ -2,6 +2,7 @@
 
 #include "Core.h"
 
+
 namespace Ancestor {
 	class ANCESTOR_API Application
 	{
