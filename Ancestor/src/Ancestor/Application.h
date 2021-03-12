@@ -5,6 +5,8 @@
 
 #include "Ancestor/Events/ApplicationEvent.h"
 #include "Ancestor/Events/MouseEvent.h"
+#include "Ancestor/LayerStack.h"
+#include "Ancestor/Events/Event.h"
 
 
 namespace Ancestor {
@@ -28,6 +30,9 @@ namespace Ancestor {
 		void Run();
 
 		void OnEvent(Event& e);
+
+		void PushLayer(Layer* layer);
+		void PushOverlay(Layer* layer);
 	private:
 		Color color;
 
@@ -36,6 +41,7 @@ namespace Ancestor {
 
 		std::unique_ptr<Window> m_Window;
 		bool m_Running = true;
+		LayerStack m_LayerStack;
 	};
 
 	//To be defined in the Client

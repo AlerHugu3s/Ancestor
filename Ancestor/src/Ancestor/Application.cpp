@@ -3,7 +3,7 @@
 
 #include "Ancestor/Log.h"
 
-#include <GLFW/glfw3.h>
+#include <glad/glad.h>
 
 namespace Ancestor {
 
@@ -21,12 +21,26 @@ namespace Ancestor {
 
 	}
 
+	void Application::PushLayer(Layer* layer)
+	{
+		m_LayerStack.PushLayer(layer);
+	}
+
+	void Application::PushOverlay(Layer* layer)
+	{
+		m_LayerStack.PushOverLayer(layer);
+	}
+
 	void Application::Run()
 	{
 		while (m_Running)
 		{
 			glClearColor(color.red, color.green, color.blue, color.alpha);
 			glClear(GL_COLOR_BUFFER_BIT);
+
+			for (Layer* layer : m_LayerStack)
+				layer->OnUpdate();
+
 			m_Window->OnUpdate();
 		}
 	}
@@ -36,7 +50,12 @@ namespace Ancestor {
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
 		dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(OnMouseClick));
-		AC_CORE_TRACE("{0}", e);
+
+		for (auto it = m_LayerStack.end();it!=m_LayerStack.begin();)
+		{
+			(*--it)->OnEvent(e);
+			if (e.m_Handled == true) break;
+		}
 	}
 
 	bool Application::OnWindowClose(WindowCloseEvent& e)
@@ -50,12 +69,12 @@ namespace Ancestor {
 		int button = e.GetButton();
 		switch (button)
 		{
-		case GLFW_MOUSE_BUTTON_1:
+		case 0:
 			color.red = 0.0f;
 			color.green = 1.0f;
 			color.blue = 1.0f;
 			return true;
-		case GLFW_MOUSE_BUTTON_2:
+		case 1:
 			color.red = 1.0f;
 			color.green = 0.0f;
 			color.blue = 1.0f;

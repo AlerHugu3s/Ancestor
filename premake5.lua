@@ -12,8 +12,10 @@ outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
 IncludeDir = {}
 IncludeDir["GLFW"] = "Ancestor/vendor/GLFW/include"
+IncludeDir["Glad"] = "Ancestor/vendor/Glad/include"
 
 include "Ancestor/vendor/GLFW"
+include "Ancestor/vendor/Glad"
 
 project "Ancestor"
     location "Ancestor"
@@ -36,24 +38,27 @@ project "Ancestor"
     {
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.GLFW}"
+        "%{IncludeDir.GLFW}",
+        "%{IncludeDir.Glad}"
     }
 
     links
     {
         "GLFW",
+        "Glad",
         "opengl32.lib"
     }
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
+        staticruntime "Off"
         systemversion "latest"
 
         defines
         {
             "AC_PLATFORM_WINDOWS",
-            "AC_BUILD_DLL"
+            "AC_BUILD_DLL",
+            "GLFW_INCLUDE_NONE"
         }
 
         postbuildcommands
@@ -63,19 +68,21 @@ project "Ancestor"
 
     filter "configurations:Debug"
         defines "AC_DEBUG"
+        buildoptions "/MDd"
         symbols "On"
 
     filter "configurations:Release"
         defines "AC_RELEATSE"
+        buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines "AC_DIST"
+        buildoptions "/MD"
         optimize "On"
     
 project "Sandbox"
-
-location "Sandbox"
+    location "Sandbox"
     kind "ConsoleApp"
     language "C++"
 
@@ -101,7 +108,7 @@ location "Sandbox"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "On"
+        staticruntime "Off"
         systemversion "latest"
 
         defines
@@ -111,13 +118,16 @@ location "Sandbox"
 
     filter "configurations:Debug"
         defines "AC_DEBUG"
+        buildoptions "/MDd"
         symbols "On"
 
     filter "configurations:Release"
         defines "AC_RELEATSE"
+        buildoptions "/MD"
         optimize "On"
 
     filter "configurations:Dist"
         defines "AC_DIST"
+        buildoptions "/MD"
         optimize "On"
     

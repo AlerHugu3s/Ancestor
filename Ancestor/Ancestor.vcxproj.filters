@@ -7,6 +7,12 @@
     <Filter Include="Ancestor\Events">
       <UniqueIdentifier>{68FECFC5-D489-3D8A-DD9A-C07E49A5998A}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ancestor.h" />
@@ -31,21 +37,39 @@
     <ClInclude Include="src\Ancestor\Events\MouseEvent.h">
       <Filter>Ancestor\Events</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ancestor\Layer.h">
+      <Filter>Ancestor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Ancestor\LayerStack.h">
+      <Filter>Ancestor</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ancestor\Log.h">
       <Filter>Ancestor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ancestor\Window.h">
+      <Filter>Ancestor</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\acpch.h" />
-    <ClInclude Include="src\Ancestor\Window.h" />
-    <ClInclude Include="src\Platform\Windows\WindowsWindow.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ancestor\Application.cpp">
       <Filter>Ancestor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Ancestor\Layer.cpp">
+      <Filter>Ancestor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ancestor\LayerStack.cpp">
+      <Filter>Ancestor</Filter>
+    </ClCompile>
     <ClCompile Include="src\Ancestor\Log.cpp">
       <Filter>Ancestor</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
+    </ClCompile>
     <ClCompile Include="src\acpch.cpp" />
-    <ClCompile Include="src\Platform\Windows\WindowsWindow.cpp" />
   </ItemGroup>
 </Project>
