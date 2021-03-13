@@ -7,8 +7,6 @@
 
 namespace Ancestor {
 
-#define BIND_EVENT_FN(x) std::bind(&Application::x, this, std::placeholders::_1) 
-
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
@@ -17,7 +15,7 @@ namespace Ancestor {
 		s_Instance = this;
 
 		m_Window = std::unique_ptr<Window>(Window::Create());
-		m_Window->SetEventCallback(BIND_EVENT_FN(OnEvent));
+		m_Window->SetEventCallback(AC_BIND_EVENT_FN(Application::OnEvent));
 
 	}
 	 
@@ -55,8 +53,7 @@ namespace Ancestor {
 	void Application::OnEvent(Event& e)
 	{
 		EventDispatcher dispatcher(e);
-		dispatcher.Dispatch<WindowCloseEvent>(BIND_EVENT_FN(OnWindowClose));
-		dispatcher.Dispatch<MouseButtonPressedEvent>(BIND_EVENT_FN(OnMouseClick));
+		dispatcher.Dispatch<WindowCloseEvent>(AC_BIND_EVENT_FN(Application::OnWindowClose));
 
 		for (auto it = m_LayerStack.end();it!=m_LayerStack.begin();)
 		{
@@ -69,24 +66,5 @@ namespace Ancestor {
 	{
 		m_Running = false;
 		return true;
-	}
-
-	bool Application::OnMouseClick(MouseButtonPressedEvent& e)
-	{
-		int button = e.GetButton();
-		switch (button)
-		{
-		case 0:
-			color.red = 0.0f;
-			color.green = 1.0f;
-			color.blue = 1.0f;
-			return true;
-		case 1:
-			color.red = 1.0f;
-			color.green = 0.0f;
-			color.blue = 1.0f;
-			return true;
-		}
-		return false;
 	}
 }

@@ -3,16 +3,21 @@
 
 #include "imgui.h"
 #include "Platform/OpenGL/ImGuiOpenGLRenderer.h"
-#include "GLFW/glfw3.h" //temp
 #include "Ancestor/Application.h"
 
+//temp
+#include <GLFW/glfw3.h>
+#include <glad/glad.h>
+
+
 namespace Ancestor {
-	Ancestor::ImGuiLayer::ImGuiLayer()
+
+	ImGuiLayer::ImGuiLayer()
 		:Layer("ImGuiLayer")
 	{
 	}
 
-	Ancestor::ImGuiLayer::~ImGuiLayer()
+	ImGuiLayer::~ImGuiLayer()
 	{
 	}
 
@@ -56,7 +61,7 @@ namespace Ancestor {
 	{
 	}
 
-	void Ancestor::ImGuiLayer::OnUpdate()
+	void ImGuiLayer::OnUpdate()
 	{
 		ImGuiIO& io = ImGui::GetIO();
 		Application& app = Application::Get();
@@ -76,8 +81,100 @@ namespace Ancestor {
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}
 
-	void Ancestor::ImGuiLayer::OnEvent(Event& event)
+	void ImGuiLayer::OnEvent(Event& event)
 	{
+		EventDispatcher dispatcher(event);
+
+		dispatcher.Dispatch<MouseButtonPressedEvent>(AC_BIND_EVENT_FN(ImGuiLayer::MousePressedCallback));
+		dispatcher.Dispatch<MouseMoveEvent>(AC_BIND_EVENT_FN(ImGuiLayer::MouseMoveCallback));
+		dispatcher.Dispatch<MouseButtonReleasedEvent>(AC_BIND_EVENT_FN(ImGuiLayer::MouseReleasedCallback));
+		dispatcher.Dispatch<MouseScrolledEvent>(AC_BIND_EVENT_FN(ImGuiLayer::MouseScrolledCallback));
+		dispatcher.Dispatch<KeyPressedEvent>(AC_BIND_EVENT_FN(ImGuiLayer::KeyPressedCallback));
+		dispatcher.Dispatch<KeyReleasedEvent>(AC_BIND_EVENT_FN(ImGuiLayer::KeyReleasedCallback));
+		dispatcher.Dispatch<WindowResizeEvent>(AC_BIND_EVENT_FN(ImGuiLayer::WindowResizeCallback));
+		dispatcher.Dispatch<KeyTypedEvent>(AC_BIND_EVENT_FN(ImGuiLayer::KeyTypeCallback));
 	}
 
+	bool ImGuiLayer::MousePressedCallback(MouseButtonPressedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[e.GetButton()] = true;
+
+		return false;
+	}
+
+	bool ImGuiLayer::MouseMoveCallback(MouseMoveEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MousePos = ImVec2(e.GetX(),e.GetY());
+
+		return false;
+	}
+
+	bool ImGuiLayer::MouseReleasedCallback(MouseButtonReleasedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseDown[e.GetButton()] = false;
+		
+		return false;
+	}
+
+	bool ImGuiLayer::MouseScrolledCallback(MouseScrolledEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.MouseWheelH += e.GetXOffset();
+		io.MouseWheel += e.GetYOffset();
+
+		return false;
+	}
+
+	bool ImGuiLayer::KeyPressedCallback(KeyPressedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.GetKeyCode()] = true;
+
+		io.KeyCtrl = io.KeysDown[GLFW_KEY_LEFT_CONTROL] || io.KeysDown[GLFW_KEY_RIGHT_CONTROL];
+		io.KeyShift = io.KeysDown[GLFW_KEY_LEFT_SHIFT] || io.KeysDown[GLFW_KEY_RIGHT_SHIFT];
+		io.KeyAlt = io.KeysDown[GLFW_KEY_LEFT_ALT] || io.KeysDown[GLFW_KEY_RIGHT_ALT];
+		io.KeySuper = io.KeysDown[GLFW_KEY_LEFT_SUPER] || io.KeysDown[GLFW_KEY_RIGHT_SUPER];
+
+		io.KeyMap[ImGuiKey_Delete] = GLFW_KEY_DELETE;
+		io.KeyMap[ImGuiKey_Backspace] = GLFW_KEY_BACKSPACE;
+		io.KeyMap[ImGuiKey_LeftArrow] = GLFW_KEY_LEFT;
+		io.KeyMap[ImGuiKey_UpArrow] = GLFW_KEY_UP;
+		io.KeyMap[ImGuiKey_RightArrow] = GLFW_KEY_RIGHT;
+		io.KeyMap[ImGuiKey_DownArrow] = GLFW_KEY_DOWN;
+		io.KeyMap[ImGuiKey_Enter] = GLFW_KEY_ENTER;
+
+		return false;
+	}
+
+	bool ImGuiLayer::KeyReleasedCallback(KeyReleasedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.KeysDown[e.GetKeyCode()] = false;
+
+		return false;
+	}
+
+	bool ImGuiLayer::KeyTypeCallback(KeyTypedEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		int c = e.GetKeyCode();
+
+		if (c > 0 && c < 0x10000)
+			io.AddInputCharacter((unsigned short)c);
+
+		return false;
+	}
+
+	bool ImGuiLayer::WindowResizeCallback(WindowResizeEvent& e)
+	{
+		ImGuiIO& io = ImGui::GetIO();
+		io.DisplaySize = ImVec2(e.GetWidth(),e.GetHeight());
+		io.DisplayFramebufferScale = ImVec2(1.0f, 1.0f);
+		glViewport(0, 0, e.GetWidth(), e.GetHeight());
+
+		return false;
+	}
 }
