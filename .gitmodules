@@ -4,3 +4,6 @@
 [submodule "Ancestor/vendor/GLFW"]
 	path = Ancestor/vendor/GLFW
 	url = https://github.com/TheCherno/GLFW
+[submodule "Ancestor/vendor/imgui"]
+	path = Ancestor/vendor/imgui
+	url = https://github.com/TheCherno/imgui
