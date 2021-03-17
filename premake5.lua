@@ -1,6 +1,7 @@
 workspace "Ancestor"
     architecture "x64"
 
+    startproject "Sandbox"
     configurations
     {
         "Debug",
@@ -15,14 +16,17 @@ IncludeDir["GLFW"] = "Ancestor/vendor/GLFW/include"
 IncludeDir["Glad"] = "Ancestor/vendor/Glad/include"
 IncludeDir["ImGui"] = "Ancestor/vendor/imgui"
 
-include "Ancestor/vendor/GLFW"
-include "Ancestor/vendor/Glad"
-include "Ancestor/vendor/imgui"
+group "Dependencies"
+    include "Ancestor/vendor/GLFW"
+    include "Ancestor/vendor/Glad"
+    include "Ancestor/vendor/imgui"
+group ""
 
 project "Ancestor"
     location "Ancestor"
     kind "SharedLib"
     language "C++"
+    staticruntime "off"
 
     targetdir ("bin/"..outputdir.."/%{prj.name}")
     objdir ("bin-int/"..outputdir.."/%{prj.name}")
@@ -55,7 +59,6 @@ project "Ancestor"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "Off"
         systemversion "latest"
 
         defines
@@ -67,28 +70,29 @@ project "Ancestor"
 
         postbuildcommands
         {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. outputdir .."/Sandbox")
+            ("{COPY} %{cfg.buildtarget.relpath} \"../bin/" .. outputdir .."/Sandbox/\"")
         }
 
     filter "configurations:Debug"
         defines "AC_DEBUG"
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "AC_RELEATSE"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "AC_DIST"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
     
 project "Sandbox"
     location "Sandbox"
     kind "ConsoleApp"
     language "C++"
+    staticruntime "off"
 
     targetdir ("bin/"..outputdir.."/%{prj.name}")
     objdir ("bin-int/"..outputdir.."/%{prj.name}")
@@ -112,7 +116,6 @@ project "Sandbox"
 
     filter "system:windows"
         cppdialect "C++17"
-        staticruntime "Off"
         systemversion "latest"
 
         defines
@@ -122,16 +125,16 @@ project "Sandbox"
 
     filter "configurations:Debug"
         defines "AC_DEBUG"
-        buildoptions "/MDd"
+        runtime "Debug"
         symbols "On"
 
     filter "configurations:Release"
         defines "AC_RELEATSE"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
 
     filter "configurations:Dist"
         defines "AC_DIST"
-        buildoptions "/MD"
+        runtime "Release"
         optimize "On"
     
