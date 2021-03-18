@@ -8,6 +8,7 @@
 #include "Ancestor/LayerStack.h"
 #include "Ancestor/Events/Event.h"
 
+#include "ImGui/ImGuiLayer.h"
 
 namespace Ancestor {
 	struct Color
@@ -44,6 +45,7 @@ namespace Ancestor {
 		bool OnWindowClose(WindowCloseEvent& e);
 
 		std::unique_ptr<Window> m_Window;
+		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 

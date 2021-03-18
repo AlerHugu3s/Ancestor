@@ -15,6 +15,7 @@ IncludeDir = {}
 IncludeDir["GLFW"] = "Ancestor/vendor/GLFW/include"
 IncludeDir["Glad"] = "Ancestor/vendor/Glad/include"
 IncludeDir["ImGui"] = "Ancestor/vendor/imgui"
+IncludeDir["glm"] = "Ancestor/vendor/glm"
 
 group "Dependencies"
     include "Ancestor/vendor/GLFW"
@@ -37,7 +38,9 @@ project "Ancestor"
     files
     {
         "%{prj.name}/src/**.h",
-        "%{prj.name}/src/**.cpp"
+        "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/glm/glm/**.hpp",
+        "%{prj.name}/vendor/glm/glm/**.inl"
     }
 
     includedirs
@@ -46,7 +49,8 @@ project "Ancestor"
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
-        "%{IncludeDir.ImGui}"
+        "%{IncludeDir.ImGui}",
+        "%{IncludeDir.glm}"
     }
 
     links
@@ -106,11 +110,14 @@ project "Sandbox"
     includedirs
     {
         "Ancestor/vendor/spdlog/include",
-        "Ancestor/src"
+        "Ancestor/src",
+        "Ancestor/vendor",
+        "%{IncludeDir.glm}"
     }
 
     links
     {
+        "ImGui",
         "Ancestor"
     }
 

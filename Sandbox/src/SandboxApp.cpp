@@ -1,4 +1,5 @@
 #include <Ancestor.h>
+#include "imgui/imgui.h"
 
 class ExampleLayer : public Ancestor::Layer
 {
@@ -11,16 +12,17 @@ public:
 		if(Ancestor::Input::IsKeyPressed(AC_KEY_TAB))
 			AC_TRACE("TAB Key is pressed (Poll)");
 	}
+
+	//virtual void OnImGuiRender() override
+	//{
+	//	ImGui::Begin("Test");
+	//	ImGui::Text("Hello World!");
+	//	ImGui::End();
+	//}
+
 	void OnEvent(Ancestor::Event& event) override
 	{
 		//AC_TRACE("{0}", event);
-		if (event.GetEventType() == Ancestor::EventType::KeyPressed)
-		{
-		Ancestor::KeyPressedEvent& e = (Ancestor::KeyPressedEvent&)event;
-		if(e.GetKeyCode() == AC_KEY_TAB)
-			AC_TRACE("TAB Key is pressed (Event)");
-		AC_TRACE("{0}",(char)e.GetKeyCode());
-		}
 	}
 };
 
@@ -30,7 +32,6 @@ public:
 	Sandbox()
 	{
 		PushLayer(new ExampleLayer());
-		PushOverlay(new Ancestor::ImGuiLayer());
 	}
 	~Sandbox()
 	{

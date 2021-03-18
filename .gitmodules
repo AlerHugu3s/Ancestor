@@ -7,3 +7,6 @@
 [submodule "Ancestor/vendor/imgui"]
 	path = Ancestor/vendor/imgui
 	url = https://github.com/TheCherno/imgui
+[submodule "Ancestor\\vendor\\glm"]
+	path = Ancestor\\vendor\\glm
+	url = https://github.com/g-truc/glm/
