@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "Ancestor/Log.h"
+
 #ifdef AC_PLATFORM_WINDOWS
 	#include <Windows.h>
 #endif

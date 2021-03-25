@@ -1,11 +1,15 @@
 #pragma once
 
 #ifdef AC_PLATFORM_WINDOWS
+#if AC_DYNAMIC_LINK
 	#ifdef AC_BUILD_DLL
 		#define ANCESTOR_API __declspec(dllexport)
 	#else
 		#define ANCESTOR_API __declspec(dllimport)
 	#endif
+#else
+	#define ANCESTOR_API
+#endif
 #else
 	#error Ancestor only support Windows!
 #endif

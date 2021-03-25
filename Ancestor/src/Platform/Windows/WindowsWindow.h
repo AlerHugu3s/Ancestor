@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Ancestor/Window.h"
+#include "Ancestor/Renderer/GraphicsContext.h"
 
 #include <GLFW/glfw3.h>
+
 
 struct GLFWwindow;
 
@@ -28,6 +30,7 @@ namespace Ancestor {
 		virtual void Shutdown();
 	private:
 		GLFWwindow* m_Window;
+		GraphicsContext* m_Context;
 
 		struct WindowData
 		{

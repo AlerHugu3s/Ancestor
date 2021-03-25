@@ -13,12 +13,12 @@ public:
 			AC_TRACE("TAB Key is pressed (Poll)");
 	}
 
-	//virtual void OnImGuiRender() override
-	//{
-	//	ImGui::Begin("Test");
-	//	ImGui::Text("Hello World!");
-	//	ImGui::End();
-	//}
+	virtual void OnImGuiRender() override
+	{
+		ImGui::Begin("Test");
+		ImGui::Text("Hello World!");
+		ImGui::End();
+	}
 
 	void OnEvent(Ancestor::Event& event) override
 	{
