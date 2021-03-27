@@ -10,6 +10,10 @@
 
 #include "ImGui/ImGuiLayer.h"
 
+#include "Ancestor/Renderer/Shader.h"
+#include "Ancestor/Renderer/Buffer.h"
+#include "Ancestor/Renderer/VertexArray.h"
+
 namespace Ancestor {
 	struct Color
 	{
@@ -49,7 +53,11 @@ namespace Ancestor {
 		bool m_Running = true;
 		LayerStack m_LayerStack;
 
-		unsigned int m_VertexArray, m_VertexBuffer, m_IndexBuffer;
+		std::shared_ptr<Shader> m_Shader;
+		std::shared_ptr<VertexArray> m_VertexArray;
+
+		std::shared_ptr<Shader> squareShader;
+		std::shared_ptr<VertexArray> squareVA;
 	private:
 		static Application* s_Instance;
 	};

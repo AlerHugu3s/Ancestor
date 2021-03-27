@@ -5,7 +5,6 @@
 #include "Ancestor/Input.h"
 
 #include <glad/glad.h>
-
 namespace Ancestor {
 
 	Application* Application::s_Instance = nullptr;
@@ -20,30 +19,101 @@ namespace Ancestor {
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
+		m_VertexArray.reset(VertexArray::Create());
 
-		glGenVertexArrays(1, &m_VertexArray);
-		glBindVertexArray(m_VertexArray);
-
-		glGenBuffers(1, &m_VertexBuffer);
-		glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer);
-
-		float vertices[3 * 3] =
+		float vertices[3 * 7] =
 		{
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.0f,  0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+			 0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f, 1.0f,
+			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
+		
+		std::shared_ptr<VertexBuffer> vertexBuffer;
+		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
 
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-
-		glGenBuffers(1, &m_IndexBuffer);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer);
+		BufferLayout layout = {
+			{ShaderDataType::Float3 ,"a_Position" },
+			{ShaderDataType::Float4 ,"a_Color"}
+		};
+		vertexBuffer->SetLayout(layout);
+		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		unsigned int indices[3] = { 0,1,2 };
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+		std::shared_ptr<IndexBuffer> indexBuffer;
+		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
+		m_VertexArray->SetIndexBuffer(indexBuffer);
+
+		std::string vertexSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec4 a_Color;
+
+			out vec4 v_Color;
+
+			void main()
+			{
+				gl_Position = vec4(a_Position,1.0);
+				v_Color = a_Color;
+			}
+		)";
+		std::string fragmentSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			in vec4 v_Color;
+
+			void main()
+			{
+				color = v_Color;
+			}
+		)";
+
+		m_Shader.reset(new Shader(vertexSrc,fragmentSrc));
+
+		squareVA.reset(VertexArray::Create());
+		float sqVertices[4 * 3] =
+		{
+			-0.75f, -0.75f, 0.0f,
+			 0.75f, -0.75f, 0.0f,
+			 0.75f,  0.75f, 0.0f,
+			-0.75F,  0.75f, 0.0f
+		};
+		std::shared_ptr<VertexBuffer> squareVB;
+		squareVB.reset(VertexBuffer::Create(sqVertices, sizeof(sqVertices)));
+		BufferLayout sqLayout = {
+			{ShaderDataType::Float3 ,"a_Position" }
+		};
+		squareVB->SetLayout(sqLayout);
+		squareVA->AddVertexBuffer(squareVB);
+		unsigned int sqIndices[6] = { 0,1,2,2,3,0 };
+		std::shared_ptr<IndexBuffer> squareIB;
+		squareIB.reset(IndexBuffer::Create(sqIndices, sizeof(sqIndices) / sizeof(uint32_t)));
+		squareVA->SetIndexBuffer(squareIB);
+
+		std::string sqVertexSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+
+			void main()
+			{
+				gl_Position = vec4(a_Position,1.0);
+			}
+		)";
+		std::string sqFragmentSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			void main()
+			{
+				color = vec4(0.2,0.2,0.8,1.0);
+			}
+		)";
+
+		squareShader.reset(new Shader(sqVertexSrc, sqFragmentSrc));
 	}
 	 
 	Application::~Application()
@@ -70,8 +140,13 @@ namespace Ancestor {
 			glClearColor(0.1f, 0.1f, 0.1f, 1);
 			glClear(GL_COLOR_BUFFER_BIT);
 
-			glBindVertexArray(m_VertexArray);
-			glDrawElements(GL_TRIANGLES,3,GL_UNSIGNED_INT,nullptr);
+			squareShader->Bind();
+			squareVA->Bind();
+			glDrawElements(GL_TRIANGLES, squareVA->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+
+			m_Shader->Bind();
+			m_VertexArray->Bind();
+			glDrawElements(GL_TRIANGLES,m_VertexArray->GetIndexBuffer()->GetCount(),GL_UNSIGNED_INT,nullptr);
 
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
