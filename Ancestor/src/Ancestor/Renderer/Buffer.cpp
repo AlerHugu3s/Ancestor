@@ -9,9 +9,9 @@ namespace Ancestor {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:
+		case RendererAPI::API::None:
 			AC_CORE_ASSERT(false, "RendererAPI is None! Not Supported");
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 			return new OpenGLVertexBuffer(vertices, size);
 		}
 		AC_CORE_ASSERT(false, "RendererAPI is unknown!");
@@ -21,9 +21,9 @@ namespace Ancestor {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::None:
+		case RendererAPI::API::None:
 			AC_CORE_ASSERT(false, "RendererAPI is None! Not Supported");
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 			return new OpenGLIndexBuffer(indices, size);
 		}
 		AC_CORE_ASSERT(false, "RendererAPI is unknown!");
