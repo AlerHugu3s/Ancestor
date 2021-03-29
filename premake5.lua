@@ -18,8 +18,8 @@ IncludeDir["ImGui"] = "Ancestor/vendor/imgui"
 IncludeDir["glm"] = "Ancestor/vendor/glm"
 
 group "Dependencies"
-    include "Ancestor/vendor/GLFW"
     include "Ancestor/vendor/Glad"
+    include "Ancestor/vendor/GLFW"
     include "Ancestor/vendor/imgui"
 group ""
 
