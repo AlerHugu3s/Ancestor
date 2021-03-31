@@ -143,6 +143,7 @@
     <ClInclude Include="src\Ancestor.h" />
     <ClInclude Include="src\Ancestor\Application.h" />
     <ClInclude Include="src\Ancestor\Core.h" />
+    <ClInclude Include="src\Ancestor\Core\Timestep.h" />
     <ClInclude Include="src\Ancestor\EntryPoint.h" />
     <ClInclude Include="src\Ancestor\Events\ApplicationEvent.h" />
     <ClInclude Include="src\Ancestor\Events\Event.h" />

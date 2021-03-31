@@ -108,14 +108,31 @@ public:
 
 		squareShader.reset(new Ancestor::Shader(sqVertexSrc, sqFragmentSrc));
 	}
-	void OnUpdate() override
+	void OnUpdate(Ancestor::Timestep ts) override
 	{
 		if (Ancestor::Input::IsMouseButtonPressed(AC_MOUSE_BUTTON_RIGHT))
 		{
 			m_CameraPos.x = (1.6f - Ancestor::Input::GetMouseX() / 1280.0f * 3.2f);
 			m_CameraPos.y = -0.9f + Ancestor::Input::GetMouseY() / 720.0f * 1.8f;
-			m_Camera.SetPosition(m_CameraPos);
 		}
+
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_LEFT))
+		{
+			m_CameraPos.x -= m_CameraSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_RIGHT))
+		{
+			m_CameraPos.x += m_CameraSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_UP))
+		{
+			m_CameraPos.y += m_CameraSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_DOWN))
+		{
+			m_CameraPos.y -= m_CameraSpeed * ts;
+		}
+		m_Camera.SetPosition(m_CameraPos);
 
 		Ancestor::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 		Ancestor::RenderCommand::Clear();
@@ -169,7 +186,7 @@ private:
 
 	Ancestor::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPos;
-	float m_CameraSpeed = 0.1f;
+	float m_CameraSpeed = -3.0f;
 	bool m_IsDrag = false;
 };
 
