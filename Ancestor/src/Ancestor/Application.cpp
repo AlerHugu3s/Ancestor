@@ -3,8 +3,7 @@
 
 #include "Ancestor/Log.h"
 #include "Ancestor/Input.h"
-#include "Ancestor/Renderer/Renderer.h"
-#include "Ancestor/Renderer/RenderCommand.h"
+
 
 #include <glad/glad.h>
 namespace Ancestor {
@@ -12,7 +11,6 @@ namespace Ancestor {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
-		:m_Camera(-1.6f,1.6f,-0.9f,0.9f)
 	{
 		AC_CORE_ASSERT(!s_Instance,"Application already Exist!");
 		s_Instance = this;
@@ -22,105 +20,6 @@ namespace Ancestor {
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);
-		m_VertexArray.reset(VertexArray::Create());
-
-		float vertices[3 * 7] =
-		{
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
-		};
-		
-		std::shared_ptr<VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(VertexBuffer::Create(vertices, sizeof(vertices)));
-
-		BufferLayout layout = {
-			{ShaderDataType::Float3 ,"a_Position" },
-			{ShaderDataType::Float4 ,"a_Color"}
-		};
-		vertexBuffer->SetLayout(layout);
-		m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-		unsigned int indices[3] = { 0,1,2 };
-		std::shared_ptr<IndexBuffer> indexBuffer;
-		indexBuffer.reset(IndexBuffer::Create(indices, sizeof(indices)/sizeof(uint32_t)));
-		m_VertexArray->SetIndexBuffer(indexBuffer);
-
-		std::string vertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
-
-			uniform mat4 u_ViewProjection;
-
-			out vec4 v_Color;
-
-			void main()
-			{
-				gl_Position = u_ViewProjection * vec4(a_Position,1.0);
-				v_Color = a_Color;
-			}
-		)";
-		std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec4 v_Color;
-
-			void main()
-			{
-				color = v_Color;
-			}
-		)";
-
-		m_Shader.reset(new Shader(vertexSrc,fragmentSrc));
-
-		squareVA.reset(VertexArray::Create());
-		float sqVertices[4 * 3] =
-		{
-			-0.75f, -0.75f, 0.0f,
-			 0.75f, -0.75f, 0.0f,
-			 0.75f,  0.75f, 0.0f,
-			-0.75F,  0.75f, 0.0f
-		};
-		std::shared_ptr<VertexBuffer> squareVB;
-		squareVB.reset(VertexBuffer::Create(sqVertices, sizeof(sqVertices)));
-		BufferLayout sqLayout = {
-			{ShaderDataType::Float3 ,"a_Position" }
-		};
-		squareVB->SetLayout(sqLayout);
-		squareVA->AddVertexBuffer(squareVB);
-		unsigned int sqIndices[6] = { 0,1,2,2,3,0 };
-		std::shared_ptr<IndexBuffer> squareIB;
-		squareIB.reset(IndexBuffer::Create(sqIndices, sizeof(sqIndices) / sizeof(uint32_t)));
-		squareVA->SetIndexBuffer(squareIB);
-
-		std::string sqVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-
-			uniform mat4 u_ViewProjection;
-
-			void main()
-			{
-				gl_Position = u_ViewProjection * vec4(a_Position,1.0);
-			}
-		)";
-		std::string sqFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			void main()
-			{
-				color = vec4(0.2,0.2,0.8,1.0);
-			}
-		)";
-
-		squareShader.reset(new Shader(sqVertexSrc, sqFragmentSrc));
 	}
 	 
 	Application::~Application()
@@ -144,19 +43,6 @@ namespace Ancestor {
 	{
 		while (m_Running)
 		{
-			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
-			RenderCommand::Clear();
-
-			m_Camera.SetRotation(glm::vec3(60.0f, 50.0f, 90.0f));
-
-			Renderer::BeginScene(m_Camera);
-
-			Renderer::Submit(squareVA,squareShader);
-
-			Renderer::Submit(m_VertexArray,m_Shader);
-
-			Renderer::EndScene();
-
 			for (Layer* layer : m_LayerStack)
 				layer->OnUpdate();
 

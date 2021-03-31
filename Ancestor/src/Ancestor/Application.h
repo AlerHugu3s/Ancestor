@@ -10,10 +10,7 @@
 
 #include "ImGui/ImGuiLayer.h"
 
-#include "Ancestor/Renderer/Shader.h"
-#include "Ancestor/Renderer/Buffer.h"
-#include "Ancestor/Renderer/VertexArray.h"
-#include "Ancestor/Renderer/Camera.h"
+
 
 
 namespace Ancestor {
@@ -54,14 +51,6 @@ namespace Ancestor {
 		ImGuiLayer* m_ImGuiLayer;
 		bool m_Running = true;
 		LayerStack m_LayerStack;
-
-		std::shared_ptr<Shader> m_Shader;
-		std::shared_ptr<VertexArray> m_VertexArray;
-
-		std::shared_ptr<Shader> squareShader;
-		std::shared_ptr<VertexArray> squareVA;
-
-		OrthographicCamera m_Camera;
 	private:
 		static Application* s_Instance;
 	};
