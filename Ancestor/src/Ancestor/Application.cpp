@@ -12,6 +12,7 @@ namespace Ancestor {
 	Application* Application::s_Instance = nullptr;
 
 	Application::Application()
+		:m_Camera(-1.6f,1.6f,-0.9f,0.9f)
 	{
 		AC_CORE_ASSERT(!s_Instance,"Application already Exist!");
 		s_Instance = this;
@@ -51,11 +52,13 @@ namespace Ancestor {
 			layout(location = 0) in vec3 a_Position;
 			layout(location = 1) in vec4 a_Color;
 
+			uniform mat4 u_ViewProjection;
+
 			out vec4 v_Color;
 
 			void main()
 			{
-				gl_Position = vec4(a_Position,1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position,1.0);
 				v_Color = a_Color;
 			}
 		)";
@@ -99,9 +102,11 @@ namespace Ancestor {
 			
 			layout(location = 0) in vec3 a_Position;
 
+			uniform mat4 u_ViewProjection;
+
 			void main()
 			{
-				gl_Position = vec4(a_Position,1.0);
+				gl_Position = u_ViewProjection * vec4(a_Position,1.0);
 			}
 		)";
 		std::string sqFragmentSrc = R"(
@@ -142,13 +147,13 @@ namespace Ancestor {
 			RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
 			RenderCommand::Clear();
 
-			Renderer::BeginScene();
+			m_Camera.SetRotation(glm::vec3(60.0f, 50.0f, 90.0f));
 
-			squareShader->Bind();
-			Renderer::Submit(squareVA);
+			Renderer::BeginScene(m_Camera);
 
-			m_Shader->Bind();
-			Renderer::Submit(m_VertexArray);
+			Renderer::Submit(squareVA,squareShader);
+
+			Renderer::Submit(m_VertexArray,m_Shader);
 
 			Renderer::EndScene();
 

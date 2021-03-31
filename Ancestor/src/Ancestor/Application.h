@@ -13,6 +13,8 @@
 #include "Ancestor/Renderer/Shader.h"
 #include "Ancestor/Renderer/Buffer.h"
 #include "Ancestor/Renderer/VertexArray.h"
+#include "Ancestor/Renderer/Camera.h"
+
 
 namespace Ancestor {
 	struct Color
@@ -58,6 +60,8 @@ namespace Ancestor {
 
 		std::shared_ptr<Shader> squareShader;
 		std::shared_ptr<VertexArray> squareVA;
+
+		OrthographicCamera m_Camera;
 	private:
 		static Application* s_Instance;
 	};

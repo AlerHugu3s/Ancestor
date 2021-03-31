@@ -156,6 +156,7 @@
     <ClInclude Include="src\Ancestor\Log.h" />
     <ClInclude Include="src\Ancestor\MouseButtonCodes.h" />
     <ClInclude Include="src\Ancestor\Renderer\Buffer.h" />
+    <ClInclude Include="src\Ancestor\Renderer\Camera.h" />
     <ClInclude Include="src\Ancestor\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Ancestor\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Ancestor\Renderer\Renderer.h" />
@@ -592,6 +593,7 @@
     <ClCompile Include="src\Ancestor\LayerStack.cpp" />
     <ClCompile Include="src\Ancestor\Log.cpp" />
     <ClCompile Include="src\Ancestor\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Ancestor\Renderer\Camera.cpp" />
     <ClCompile Include="src\Ancestor\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Ancestor\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Ancestor\Renderer\RendererAPI.cpp" />
