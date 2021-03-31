@@ -4,6 +4,7 @@
 #include "Ancestor/Log.h"
 #include "Ancestor/Input.h"
 
+#include <GLFW/glfw3.h> // need to be implemented according to the Platform
 
 #include <glad/glad.h>
 namespace Ancestor {
@@ -43,8 +44,12 @@ namespace Ancestor {
 	{
 		while (m_Running)
 		{
+			float time = glfwGetTime();
+			Timestep timestep = time - m_LastFrameTime;
+			m_LastFrameTime = time;
+
 			for (Layer* layer : m_LayerStack)
-				layer->OnUpdate();
+				layer->OnUpdate(timestep);
 
 			m_ImGuiLayer->Begin();
 			for (Layer* layer : m_LayerStack)

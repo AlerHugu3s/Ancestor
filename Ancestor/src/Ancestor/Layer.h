@@ -2,6 +2,7 @@
 
 #include "Ancestor/Core.h"
 #include "Ancestor/Events/Event.h"
+#include "Ancestor/Core/Timestep.h"
 
 namespace Ancestor{
 	class ANCESTOR_API Layer
@@ -12,7 +13,7 @@ namespace Ancestor{
 
 		virtual void OnAttach(){}
 		virtual void OnDetach() {}
-		virtual void OnUpdate() {}
+		virtual void OnUpdate(Timestep ts) {}
 		virtual void OnImGuiRender() {}
 		virtual void OnEvent(Event& event) {}
 
