@@ -5,14 +5,14 @@
 #include "Platform/OpenGL/OpenGLVertexArray.h"
 
 namespace Ancestor {
-	VertexArray* VertexArray::Create()
+	Ref<VertexArray> VertexArray::Create()
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:
 			AC_CORE_ASSERT(false, "RendererAPI is None! Not Supported");
 		case RendererAPI::API::OpenGL:
-			return new OpenGLVertexArray();
+			return std::make_shared<OpenGLVertexArray>();
 		}
 		AC_CORE_ASSERT(false, "RendererAPI is unknown!");
 		return nullptr;

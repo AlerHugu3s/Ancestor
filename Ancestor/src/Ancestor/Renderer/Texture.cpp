@@ -1,30 +1,31 @@
 #include "acpch.h"
-#include "Buffer.h"
+#include "Texture.h"
 
-#include "Renderer.h"
-#include "Platform/OpenGL/OpenGLBuffer.h"
+#include "Ancestor/Renderer/Renderer.h"
+#include "Platform/OpenGL/OpenGLTexture2D.h"
+#include "Platform/OpenGL/OpenGLTexture3D.h"
 
 namespace Ancestor {
-	Ref<VertexBuffer> VertexBuffer::Create(float* vertices, uint32_t size)
+	Ref<Texture2D> Texture2D::Create(const std::string& path)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:
 			AC_CORE_ASSERT(false, "RendererAPI is None! Not Supported");
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLVertexBuffer>(vertices, size);
+			return std::make_shared<OpenGLTexture2D>(path);
 		}
 		AC_CORE_ASSERT(false, "RendererAPI is unknown!");
 		return nullptr;
 	}
-	Ref <IndexBuffer> IndexBuffer::Create(uint32_t* indices, uint32_t size)
+	Ref<Texture3D> Texture3D::Create(const std::string& path)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::API::None:
 			AC_CORE_ASSERT(false, "RendererAPI is None! Not Supported");
 		case RendererAPI::API::OpenGL:
-			return std::make_shared<OpenGLIndexBuffer>(indices, size);
+			return std::make_shared<OpenGLTexture3D>(path);
 		}
 		AC_CORE_ASSERT(false, "RendererAPI is unknown!");
 		return nullptr;

@@ -12,7 +12,7 @@ public:
 	ExampleLayer()
 		: Layer("Example"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f),m_CameraPos(0.0f)
 	{
-		m_VertexArray.reset(Ancestor::VertexArray::Create());
+		m_VertexArray = Ancestor::VertexArray::Create();
 
 		float vertices[3 * 7] =
 		{
@@ -21,8 +21,8 @@ public:
 			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
 		};
 
-		std::shared_ptr<Ancestor::VertexBuffer> vertexBuffer;
-		vertexBuffer.reset(Ancestor::VertexBuffer::Create(vertices, sizeof(vertices)));
+		Ancestor::Ref<Ancestor::VertexBuffer> vertexBuffer;
+		vertexBuffer = Ancestor::VertexBuffer::Create(vertices, sizeof(vertices));
 
 		Ancestor::BufferLayout layout = {
 			{Ancestor::ShaderDataType::Float3 ,"a_Position" },
@@ -32,8 +32,8 @@ public:
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		unsigned int indices[3] = { 0,1,2 };
-		std::shared_ptr<Ancestor::IndexBuffer> indexBuffer;
-		indexBuffer.reset(Ancestor::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t)));
+		Ancestor::Ref<Ancestor::IndexBuffer> indexBuffer;
+		indexBuffer = Ancestor::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
 		m_VertexArray->SetIndexBuffer(indexBuffer);
 
 		std::string vertexSrc = R"(
@@ -66,26 +66,27 @@ public:
 			}
 		)";
 
-		m_Shader.reset(Ancestor::Shader::Create(vertexSrc, fragmentSrc));
+		m_Shader = Ancestor::Shader::Create(vertexSrc, fragmentSrc);
 
-		squareVA.reset(Ancestor::VertexArray::Create());
-		float sqVertices[4 * 3] =
+		squareVA = Ancestor::VertexArray::Create();
+		float sqVertices[5 * 4] =
 		{
-			-0.5f, -0.5f, 0.0f,
-			 0.5f, -0.5f, 0.0f,
-			 0.5f,  0.5f, 0.0f,
-			-0.5F,  0.5f, 0.0f
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5F,  0.5f, 0.0f, 0.0f, 1.0f
 		};
-		std::shared_ptr<Ancestor::VertexBuffer> squareVB;
-		squareVB.reset(Ancestor::VertexBuffer::Create(sqVertices, sizeof(sqVertices)));
+		Ancestor::Ref<Ancestor::VertexBuffer> squareVB;
+		squareVB = Ancestor::VertexBuffer::Create(sqVertices, sizeof(sqVertices));
 		Ancestor::BufferLayout sqLayout = {
-			{Ancestor::ShaderDataType::Float3 ,"a_Position" }
+			{Ancestor::ShaderDataType::Float3 ,"a_Position" },
+			{Ancestor::ShaderDataType::Float2 ,"a_TexCoord" }
 		};
 		squareVB->SetLayout(sqLayout);
 		squareVA->AddVertexBuffer(squareVB);
 		unsigned int sqIndices[6] = { 0,1,2,2,3,0 };
-		std::shared_ptr<Ancestor::IndexBuffer> squareIB;
-		squareIB.reset(Ancestor::IndexBuffer::Create(sqIndices, sizeof(sqIndices) / sizeof(uint32_t)));
+		Ancestor::Ref<Ancestor::IndexBuffer> squareIB;
+		squareIB = Ancestor::IndexBuffer::Create(sqIndices, sizeof(sqIndices) / sizeof(uint32_t));
 		squareVA->SetIndexBuffer(squareIB);
 
 		std::string sqVertexSrc = R"(
@@ -114,7 +115,42 @@ public:
 			}
 		)";
 
-		squareShader.reset(Ancestor::Shader::Create(sqVertexSrc, sqFragmentSrc));
+		squareShader = Ancestor::Shader::Create(sqVertexSrc, sqFragmentSrc);
+
+		std::string textureShaderVertexSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) in vec3 a_Position;
+			layout(location = 1) in vec2 a_TexCoord;
+
+			uniform mat4 u_ViewProjection;
+			uniform mat4 u_Transform;
+
+			out vec2 v_TexCoord;
+
+			void main()
+			{
+				v_TexCoord = a_TexCoord;
+				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position,1.0);
+			}
+		)";
+		std::string textureShaderFragmentSrc = R"(
+			#version 330 core
+			
+			layout(location = 0) out vec4 color;
+
+			uniform vec3 u_Color;
+			uniform sampler2D u_Texure;
+
+			in vec2 v_TexCoord;
+
+			void main()
+			{
+				color = texture(u_Texure,v_TexCoord);
+			}
+		)";
+		m_Texture = Ancestor::Texture2D::Create("assets/textures/BlueNoise.png");
+		textureShader = Ancestor::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc);
 	}
 	void OnUpdate(Ancestor::Timestep ts) override
 	{
@@ -170,7 +206,10 @@ public:
 				Ancestor::Renderer::Submit(squareVA, squareShader,transform);
 			}
 		}
-		Ancestor::Renderer::Submit(m_VertexArray, m_Shader);
+		m_Texture->Bind(0);
+		Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+
+		//Ancestor::Renderer::Submit(m_VertexArray, m_Shader);
 
 		Ancestor::Renderer::EndScene();
 	}
@@ -207,17 +246,20 @@ public:
 	}
 
 private:
-	std::shared_ptr<Ancestor::Shader> m_Shader;
-	std::shared_ptr<Ancestor::VertexArray> m_VertexArray;
+	Ancestor::Ref<Ancestor::Shader> m_Shader;
+	Ancestor::Ref<Ancestor::VertexArray> m_VertexArray;
 
-	std::shared_ptr<Ancestor::Shader> squareShader;
-	std::shared_ptr<Ancestor::VertexArray> squareVA;
+	Ancestor::Ref<Ancestor::Shader> squareShader;
+	Ancestor::Ref<Ancestor::VertexArray> squareVA;
+
+	Ancestor::Ref<Ancestor::Texture> m_Texture;
+	Ancestor::Ref<Ancestor::Shader> textureShader;
 
 	Ancestor::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPos;
 	float m_CameraSpeed = -3.0f;
 	bool m_IsDrag = false;
-	glm::vec3 m_SqColor;
+	glm::vec3 m_SqColor = glm::vec3(0.8f,0.2f,0.2f);
 };
 
 class Sandbox : public Ancestor::Application

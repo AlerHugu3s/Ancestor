@@ -27,6 +27,7 @@
 #include "Ancestor/Renderer/VertexArray.h"
 
 #include "Ancestor/Renderer/Camera.h"
+#include "Ancestor/Renderer/Texture.h"
 // ---------------------------------
 
 //-----------Entry Point------------------

@@ -16,6 +16,7 @@ IncludeDir["GLFW"] = "Ancestor/vendor/GLFW/include"
 IncludeDir["Glad"] = "Ancestor/vendor/Glad/include"
 IncludeDir["ImGui"] = "Ancestor/vendor/imgui"
 IncludeDir["glm"] = "Ancestor/vendor/glm"
+IncludeDir["stb_image"] = "Ancestor/vendor/stb_image"
 
 group "Dependencies"
     include "Ancestor/vendor/Glad"
@@ -40,6 +41,8 @@ project "Ancestor"
     {
         "%{prj.name}/src/**.h",
         "%{prj.name}/src/**.cpp",
+        "%{prj.name}/vendor/std_image/**.h",
+        "%{prj.name}/vendor/std_image/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
@@ -56,7 +59,8 @@ project "Ancestor"
         "%{IncludeDir.GLFW}",
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.stb_image}"
     }
 
     links
