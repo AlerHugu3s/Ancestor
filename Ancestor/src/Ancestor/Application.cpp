@@ -3,6 +3,7 @@
 
 #include "Ancestor/Log.h"
 #include "Ancestor/Input.h"
+#include "Ancestor/Renderer/Renderer.h"
 
 #include <GLFW/glfw3.h> // need to be implemented according to the Platform
 
@@ -16,8 +17,10 @@ namespace Ancestor {
 		AC_CORE_ASSERT(!s_Instance,"Application already Exist!");
 		s_Instance = this;
 
-		m_Window = Scope<Window>(Window::Create());
+		m_Window = std::unique_ptr<Window>(Window::Create());
 		m_Window->SetEventCallback(AC_BIND_EVENT_FN(Application::OnEvent));
+
+		Renderer::Init();
 
 		m_ImGuiLayer = new ImGuiLayer();
 		PushOverlay(m_ImGuiLayer);

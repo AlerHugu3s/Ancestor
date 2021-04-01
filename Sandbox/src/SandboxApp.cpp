@@ -150,6 +150,7 @@ public:
 			}
 		)";
 		m_Texture = Ancestor::Texture2D::Create("assets/textures/BlueNoise.png");
+		m_BlendingTestTexture = Ancestor::Texture2D::Create("assets/textures/twiceLogo.png");
 		textureShader = Ancestor::Shader::Create(textureShaderVertexSrc, textureShaderFragmentSrc);
 	}
 	void OnUpdate(Ancestor::Timestep ts) override
@@ -208,6 +209,8 @@ public:
 		}
 		m_Texture->Bind(0);
 		Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		m_BlendingTestTexture->Bind(0);
+		Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		//Ancestor::Renderer::Submit(m_VertexArray, m_Shader);
 
@@ -253,6 +256,7 @@ private:
 	Ancestor::Ref<Ancestor::VertexArray> squareVA;
 
 	Ancestor::Ref<Ancestor::Texture> m_Texture;
+	Ancestor::Ref<Ancestor::Texture> m_BlendingTestTexture;
 	Ancestor::Ref<Ancestor::Shader> textureShader;
 
 	Ancestor::OrthographicCamera m_Camera;
