@@ -6,13 +6,12 @@ namespace Ancestor {
 	class Shader
 	{
 	public:
-		Shader(std::string& vertexSrc, std::string& fragmentSrc);
-		~Shader();
+		virtual ~Shader() = default;
 
-		void Bind() const;
-		void UnBind() const;
+		virtual void Bind() const {}
+		virtual void UnBind() const {}
 
-		void UploadUniformMat4(const std::string& name, const glm::mat4& matrix);
+		static Shader* Create(std::string& vertexSrc, std::string& fragmentSrc);
 	private:
 		uint32_t m_RendererId;
 	};

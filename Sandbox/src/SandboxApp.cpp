@@ -1,7 +1,10 @@
 #include <Ancestor.h>
 #include "imgui/imgui.h"
 
+#include "Platform/OpenGL/OpenGLShader.h"
+
 #include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class ExampleLayer : public Ancestor::Layer
 {
@@ -63,7 +66,7 @@ public:
 			}
 		)";
 
-		m_Shader.reset(new Ancestor::Shader(vertexSrc, fragmentSrc));
+		m_Shader.reset(Ancestor::Shader::Create(vertexSrc, fragmentSrc));
 
 		squareVA.reset(Ancestor::VertexArray::Create());
 		float sqVertices[4 * 3] =
@@ -103,13 +106,15 @@ public:
 			
 			layout(location = 0) out vec4 color;
 
+			uniform vec3 u_Color;
+
 			void main()
 			{
-				color = vec4(0.2,0.2,0.8,1.0);
+				color = vec4(u_Color,1.0);
 			}
 		)";
 
-		squareShader.reset(new Ancestor::Shader(sqVertexSrc, sqFragmentSrc));
+		squareShader.reset(Ancestor::Shader::Create(sqVertexSrc, sqFragmentSrc));
 	}
 	void OnUpdate(Ancestor::Timestep ts) override
 	{
@@ -143,14 +148,25 @@ public:
 		m_Camera.SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		Ancestor::Renderer::BeginScene(m_Camera);
-
 		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+
+		std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->Bind();
+		std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Color", m_SqColor);
+
+		glm::vec4 redColor = glm::vec4(0.8, 0.2, 0.2, 1.0);
+		glm::vec4 blueColor = glm::vec4(0.2, 0.2, 0.8, 1.0);
 		for (int x = 0; x < 20; x++)
 		{
 			for (int y = 0; y < 20; y++)
 			{
 				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
 				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
+
+				/*if((x+y)%2 == 0)
+					squareShader->UploadUniformFloat4("u_Color", redColor);
+				else
+					squareShader->UploadUniformFloat4("u_Color", blueColor);*/
+
 				Ancestor::Renderer::Submit(squareVA, squareShader,transform);
 			}
 		}
@@ -161,7 +177,9 @@ public:
 
 	virtual void OnImGuiRender() override
 	{
-
+		ImGui::Begin("Color Setting");
+		ImGui::ColorEdit3("SquareColor", glm::value_ptr(m_SqColor));
+		ImGui::End();
 	}
 
 	void OnEvent(Ancestor::Event& event) override
@@ -199,6 +217,7 @@ private:
 	glm::vec3 m_CameraPos;
 	float m_CameraSpeed = -3.0f;
 	bool m_IsDrag = false;
+	glm::vec3 m_SqColor;
 };
 
 class Sandbox : public Ancestor::Application
