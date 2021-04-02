@@ -11,7 +11,8 @@ namespace Ancestor {
 		virtual void Bind() const {}
 		virtual void UnBind() const {}
 
-		static Ref<Shader> Create(std::string& vertexSrc, std::string& fragmentSrc);
+		static Ref<Shader> Create(const std::string& vertexSrc,const std::string& fragmentSrc);
+		static Ref<Shader> Create(const std::string& path);
 	private:
 		uint32_t m_RendererId;
 	};
