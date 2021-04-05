@@ -136,6 +136,7 @@ namespace Ancestor {
 		{
 			glDetachShader(program,id);
 		}
+		m_RendererId = program;
 	}
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{
@@ -147,12 +148,12 @@ namespace Ancestor {
 		while (pos != std::string::npos)
 		{
 			size_t eol = source.find_first_of("\r\n", pos);
-			AC_CORE_ASSERT(eol != std::string::npos, "Syntax error");
+			AC_CORE_ASSERT(eol == std::string::npos, "Syntax error!");
 			size_t begin = pos + typeTokenLength + 1;
 			std::string type = source.substr(begin, eol - begin);
 			AC_CORE_ASSERT((type == "vertex" || type == "fragment" || type == "pixel"), "Invalid Shader type specified!");
 
-			size_t nextLinePos = source.find_last_not_of("\r\n", eol);
+			size_t nextLinePos = source.find_first_not_of("\r\n", eol);
 			pos = source.find(typeToken, nextLinePos);
 			shaderSources[ShaderTypeFromString(type)] = source.substr(nextLinePos, 
 				pos - (nextLinePos == std::string::npos ? source.size() - 1 : nextLinePos));
