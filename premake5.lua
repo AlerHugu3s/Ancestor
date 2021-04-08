@@ -17,6 +17,7 @@ IncludeDir["Glad"] = "Ancestor/vendor/Glad/include"
 IncludeDir["ImGui"] = "Ancestor/vendor/imgui"
 IncludeDir["glm"] = "Ancestor/vendor/glm"
 IncludeDir["stb_image"] = "Ancestor/vendor/stb_image"
+IncludeDir["tinyobjloader"] = "Ancestor/vendor/tinyobjloader"
 
 group "Dependencies"
     include "Ancestor/vendor/Glad"
@@ -43,6 +44,8 @@ project "Ancestor"
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/std_image/**.h",
         "%{prj.name}/vendor/std_image/**.cpp",
+        "%{prj.name}/vendor/tinyobjloader/**.h",
+        "%{prj.name}/vendor/tinyobjloader/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
@@ -60,7 +63,8 @@ project "Ancestor"
         "%{IncludeDir.Glad}",
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.stb_image}"
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.tinyobjloader}"
     }
 
     links

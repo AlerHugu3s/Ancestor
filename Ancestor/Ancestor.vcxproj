@@ -77,7 +77,7 @@
       <PrecompiledHeaderFile>acpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;AC_PLATFORM_WINDOWS;AC_BUILD_DLL;GLFW_INCLUDE_NONE;AC_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -97,7 +97,7 @@
       <PrecompiledHeaderFile>acpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;AC_PLATFORM_WINDOWS;AC_BUILD_DLL;GLFW_INCLUDE_NONE;AC_RELEATSE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -121,7 +121,7 @@
       <PrecompiledHeaderFile>acpch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;AC_PLATFORM_WINDOWS;AC_BUILD_DLL;GLFW_INCLUDE_NONE;AC_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;vendor\spdlog\include;vendor\GLFW\include;vendor\Glad\include;vendor\imgui;vendor\glm;vendor\stb_image;vendor\tinyobjloader;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -156,6 +156,9 @@
     <ClInclude Include="src\Ancestor\LayerStack.h" />
     <ClInclude Include="src\Ancestor\Log.h" />
     <ClInclude Include="src\Ancestor\MouseButtonCodes.h" />
+    <ClInclude Include="src\Ancestor\Renderer\Material.h" />
+    <ClInclude Include="src\Ancestor\Renderer\Model.h" />
+    <ClInclude Include="src\Ancestor\Renderer\Object3D.h" />
     <ClInclude Include="src\Ancestor\Renderer\Buffer.h" />
     <ClInclude Include="src\Ancestor\Renderer\Camera.h" />
     <ClInclude Include="src\Ancestor\Renderer\GraphicsContext.h" />
@@ -168,6 +171,7 @@
     <ClInclude Include="src\Ancestor\Window.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLBuffer.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLContext.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLObject3D.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLRendererAPI.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLShader.h" />
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture2D.h" />
@@ -590,6 +594,7 @@
     <ClInclude Include="vendor\glm\glm\vec4.hpp" />
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp" />
     <ClInclude Include="vendor\stb_image\stb_image.h" />
+    <ClInclude Include="vendor\tinyobjloader\tinyobjloader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ancestor\Application.cpp" />
@@ -598,6 +603,9 @@
     <ClCompile Include="src\Ancestor\Layer.cpp" />
     <ClCompile Include="src\Ancestor\LayerStack.cpp" />
     <ClCompile Include="src\Ancestor\Log.cpp" />
+    <ClCompile Include="src\Ancestor\Renderer\Material.cpp" />
+    <ClCompile Include="src\Ancestor\Renderer\Model.cpp" />
+    <ClCompile Include="src\Ancestor\Renderer\Object3D.cpp" />
     <ClCompile Include="src\Ancestor\Renderer\Buffer.cpp" />
     <ClCompile Include="src\Ancestor\Renderer\Camera.cpp" />
     <ClCompile Include="src\Ancestor\Renderer\RenderCommand.cpp" />
@@ -608,6 +616,7 @@
     <ClCompile Include="src\Ancestor\Renderer\VertexArray.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLBuffer.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLContext.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLObject3D.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLRendererAPI.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLShader.cpp" />
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture2D.cpp" />
@@ -619,6 +628,7 @@
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="vendor\tinyobjloader\tinyobjloader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="vendor\GLFW\GLFW.vcxproj">

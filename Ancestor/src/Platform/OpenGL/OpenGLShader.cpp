@@ -79,7 +79,9 @@ namespace Ancestor {
 	void OpenGLShader::Compile(const std::unordered_map<GLenum, std::string>& shaderSources)
 	{
 		GLuint program = glCreateProgram();
-		std::vector<GLenum> glShaderIDs(shaderSources.size());
+		AC_CORE_ASSERT(shaderSources.size() >= 2, "Not Support so many Shaders!");
+		std::array<GLenum,2> glShaderIDs;
+		int  glShaderIDIndex = 0;
 		for (auto& kv : shaderSources)
 		{
 			GLenum type = kv.first;
@@ -108,8 +110,10 @@ namespace Ancestor {
 				break;
 			}
 			glAttachShader(program, shader);
-			glShaderIDs.push_back(shader);
+			glShaderIDs[glShaderIDIndex++] = shader;
 		}
+
+		m_RendererId = program;
 		glLinkProgram(program);
 
 		GLint isLinked = 0;
@@ -136,7 +140,7 @@ namespace Ancestor {
 		{
 			glDetachShader(program,id);
 		}
-		m_RendererId = program;
+		
 	}
 	std::unordered_map<GLenum, std::string> OpenGLShader::PreProcess(const std::string& source)
 	{

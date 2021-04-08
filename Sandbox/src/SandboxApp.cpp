@@ -6,23 +6,28 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
 class ExampleLayer : public Ancestor::Layer
 {
 public:
 	ExampleLayer()
 		: Layer("Example"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f),m_CameraPos(0.0f)
 	{
+		//3D Model Show
 		m_VertexArray = Ancestor::VertexArray::Create();
 
-		float vertices[3 * 7] =
+		Ancestor::Ref<Ancestor::Object3D> obj = Ancestor::Object3D::Create("assets/models/test-nan.obj", "assets/materials", true);
+		std::vector<Ancestor::Ref<Ancestor::Model>> models = obj->GetModels();
+		std::vector<float> m_3DVertices = obj->GetVertices();
+		AC_TRACE("Vertices:");
+		for (size_t j = 0; j < m_3DVertices.size(); j++)
 		{
-			-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-			 0.5f, -0.5f, 0.0f,	0.0f, 0.0f, 1.0f, 1.0f,
-			 0.0f,  0.5f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f
-		};
+			AC_TRACE(m_3DVertices[j]);
+		}
 
 		Ancestor::Ref<Ancestor::VertexBuffer> vertexBuffer;
-		vertexBuffer = Ancestor::VertexBuffer::Create(vertices, sizeof(vertices));
+		AC_CORE_ASSERT(!m_3DVertices.empty(), "Vertices is NULL!");
+		vertexBuffer = Ancestor::VertexBuffer::Create(m_3DVertices.data(), m_3DVertices.size());
 
 		Ancestor::BufferLayout layout = {
 			{Ancestor::ShaderDataType::Float3 ,"a_Position" },
@@ -31,10 +36,18 @@ public:
 		vertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
-		unsigned int indices[3] = { 0,1,2 };
 		Ancestor::Ref<Ancestor::IndexBuffer> indexBuffer;
-		indexBuffer = Ancestor::IndexBuffer::Create(indices, sizeof(indices) / sizeof(uint32_t));
-		m_VertexArray->SetIndexBuffer(indexBuffer);
+
+		for (size_t i = 0; i < models.size(); i++)
+		{
+			AC_TRACE("modelIndices:");
+			std::vector<unsigned int> vec = models[i]->GetVertexIndices();
+			for (size_t j = 0; j < vec.size(); j++)
+			{
+				AC_TRACE(vec[j]);
+			}
+			m_VertexArray->AddIndexBuffer(vec.data(), vec.size());
+		}
 
 		std::string vertexSrc = R"(
 			#version 330 core
@@ -67,55 +80,6 @@ public:
 		)";
 
 		m_Shader = Ancestor::Shader::Create(vertexSrc, fragmentSrc);
-
-		squareVA = Ancestor::VertexArray::Create();
-		float sqVertices[5 * 4] =
-		{
-			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-			-0.5F,  0.5f, 0.0f, 0.0f, 1.0f
-		};
-		Ancestor::Ref<Ancestor::VertexBuffer> squareVB;
-		squareVB = Ancestor::VertexBuffer::Create(sqVertices, sizeof(sqVertices));
-		Ancestor::BufferLayout sqLayout = {
-			{Ancestor::ShaderDataType::Float3 ,"a_Position" },
-			{Ancestor::ShaderDataType::Float2 ,"a_TexCoord" }
-		};
-		squareVB->SetLayout(sqLayout);
-		squareVA->AddVertexBuffer(squareVB);
-		unsigned int sqIndices[6] = { 0,1,2,2,3,0 };
-		Ancestor::Ref<Ancestor::IndexBuffer> squareIB;
-		squareIB = Ancestor::IndexBuffer::Create(sqIndices, sizeof(sqIndices) / sizeof(uint32_t));
-		squareVA->SetIndexBuffer(squareIB);
-
-		std::string sqVertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
-
-			void main()
-			{
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position,1.0);
-			}
-		)";
-		std::string sqFragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			uniform vec3 u_Color;
-
-			void main()
-			{
-				color = vec4(u_Color,1.0);
-			}
-		)";
-
-		squareShader = Ancestor::Shader::Create(sqVertexSrc, sqFragmentSrc);
 
 		m_Texture = Ancestor::Texture2D::Create("assets/textures/BlueNoise.png");
 		m_BlendingTestTexture = Ancestor::Texture2D::Create("assets/textures/twiceLogo.png");
@@ -153,34 +117,16 @@ public:
 		m_Camera.SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		Ancestor::Renderer::BeginScene(m_Camera);
-		static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
+		//static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
-		std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->Bind();
-		std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Color", m_SqColor);
+		//std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->Bind();
+		//std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Color", m_SqColor);
+		//m_Texture->Bind(0);
+		//Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
+		//m_BlendingTestTexture->Bind(0);
+		//Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-		glm::vec4 redColor = glm::vec4(0.8, 0.2, 0.2, 1.0);
-		glm::vec4 blueColor = glm::vec4(0.2, 0.2, 0.8, 1.0);
-		for (int x = 0; x < 20; x++)
-		{
-			for (int y = 0; y < 20; y++)
-			{
-				glm::vec3 pos(x * 0.11f, y * 0.11f, 0.0f);
-				glm::mat4 transform = glm::translate(glm::mat4(1.0f), pos) * scale;
-
-				/*if((x+y)%2 == 0)
-					squareShader->UploadUniformFloat4("u_Color", redColor);
-				else
-					squareShader->UploadUniformFloat4("u_Color", blueColor);*/
-
-				Ancestor::Renderer::Submit(squareVA, squareShader,transform);
-			}
-		}
-		m_Texture->Bind(0);
-		Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-		m_BlendingTestTexture->Bind(0);
-		Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-
-		//Ancestor::Renderer::Submit(m_VertexArray, m_Shader);
+		Ancestor::Renderer::Submit(m_VertexArray, m_Shader);
 
 		Ancestor::Renderer::EndScene();
 	}

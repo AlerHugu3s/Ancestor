@@ -28,6 +28,8 @@
 
 #include "Ancestor/Renderer/Camera.h"
 #include "Ancestor/Renderer/Texture.h"
+
+#include "Ancestor/Renderer/Object3D.h"
 // ---------------------------------
 
 //-----------Entry Point------------------

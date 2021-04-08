@@ -116,6 +116,8 @@ namespace Ancestor {
 
 		virtual uint32_t GetCount() const = 0;
 
+		virtual void AddIndices(uint32_t* indices, uint32_t size) = 0;
+
 		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t  size);
 	};
 }

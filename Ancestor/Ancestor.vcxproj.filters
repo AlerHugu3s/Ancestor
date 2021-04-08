@@ -49,6 +49,9 @@
     <Filter Include="vendor\glm\glm\gtx">
       <UniqueIdentifier>{B3A6A76B-9F8A-68C1-08EB-6214F4ED5243}</UniqueIdentifier>
     </Filter>
+    <Filter Include="vendor\tinyobjloader">
+      <UniqueIdentifier>{386CC32A-24FB-4CF4-CD19-61EFB9875D9A}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Ancestor.h">
@@ -99,6 +102,9 @@
     <ClInclude Include="src\Ancestor\MouseButtonCodes.h">
       <Filter>src\Ancestor</Filter>
     </ClInclude>
+    <ClInclude Include="src\Ancestor\Renderer\Object3D.h">
+      <Filter>src\Ancestor\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Ancestor\Renderer\Buffer.h">
       <Filter>src\Ancestor\Renderer</Filter>
     </ClInclude>
@@ -142,6 +148,9 @@
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLTexture2D.h">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture3D.h">
       <Filter>src\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Platform\OpenGL\OpenGLVertexArray.h">
@@ -1395,8 +1404,13 @@
     <ClInclude Include="vendor\glm\glm\vector_relational.hpp">
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
+    <ClInclude Include="vendor\tinyobjloader\tinyobjloader.h">
+      <Filter>vendor\tinyobjloader</Filter>
+    </ClInclude>
     <ClInclude Include="vendor\stb_image\stb_image.h" />
-    <ClInclude Include="src\Platform\OpenGL\OpenGLTexture3D.h" />
+    <ClInclude Include="src\Ancestor\Renderer\Material.h" />
+    <ClInclude Include="src\Ancestor\Renderer\Model.h" />
+    <ClInclude Include="src\Platform\OpenGL\OpenGLObject3D.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ancestor\Application.cpp">
@@ -1416,6 +1430,9 @@
     </ClCompile>
     <ClCompile Include="src\Ancestor\Log.cpp">
       <Filter>src\Ancestor</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Ancestor\Renderer\Object3D.cpp">
+      <Filter>src\Ancestor\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Ancestor\Renderer\Buffer.cpp">
       <Filter>src\Ancestor\Renderer</Filter>
@@ -1456,6 +1473,9 @@
     <ClCompile Include="src\Platform\OpenGL\OpenGLTexture2D.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
+    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture3D.cpp">
+      <Filter>src\Platform\OpenGL</Filter>
+    </ClCompile>
     <ClCompile Include="src\Platform\OpenGL\OpenGLVertexArray.cpp">
       <Filter>src\Platform\OpenGL</Filter>
     </ClCompile>
@@ -1468,7 +1488,12 @@
     <ClCompile Include="src\acpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="vendor\tinyobjloader\tinyobjloader.cpp">
+      <Filter>vendor\tinyobjloader</Filter>
+    </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
-    <ClCompile Include="src\Platform\OpenGL\OpenGLTexture3D.cpp" />
+    <ClCompile Include="src\Ancestor\Renderer\Material.cpp" />
+    <ClCompile Include="src\Ancestor\Renderer\Model.cpp" />
+    <ClCompile Include="src\Platform\OpenGL\OpenGLObject3D.cpp" />
   </ItemGroup>
 </Project>
