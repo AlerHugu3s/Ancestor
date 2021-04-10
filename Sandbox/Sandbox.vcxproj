@@ -138,6 +138,10 @@
       <Project>{04DF437A-F0AB-9E85-19C5-8C2D05F1D313}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\3DModel.glsl" />
+    <None Include="assets\shaders\3DTest.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

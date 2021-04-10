@@ -65,19 +65,6 @@ namespace Ancestor {
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
 		indexBuffer->Bind();
-
 		m_IndexBuffer = indexBuffer;
 	}
-
-	void OpenGLVertexArray::AddIndexBuffer(uint32_t* indices, uint32_t size)
-	{
-		if (!m_IndexBuffer)
-			m_IndexBuffer = IndexBuffer::Create(indices, size);
-		else
-		{
-			m_IndexBuffer->AddIndices(indices, size);
-		}
-		m_IndexBuffer->Bind();
-	}
-
 }

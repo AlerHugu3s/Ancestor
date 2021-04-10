@@ -14,6 +14,8 @@ namespace Ancestor {
 		void SetRotation(glm::vec3 rotation) { m_Rotation = rotation; RecalculateViewMartix(); }
 		const glm::vec3& GetRotation() const { return m_Rotation; }
 
+		void SetDireaction(glm::vec3 cameraFront,glm::vec3 cameraUp);
+
 		const glm::mat4& GetViewMartix() const { return m_ViewMartix; }
 		const glm::mat4& GetProjectionMartix() const { return m_ProjectionMartix; }
 		const glm::mat4& GetViewPorjectionMartix() const { return m_ViewProjectionMartix; }

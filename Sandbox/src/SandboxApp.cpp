@@ -10,80 +10,142 @@
 class ExampleLayer : public Ancestor::Layer
 {
 public:
-	ExampleLayer()
-		: Layer("Example"),m_Camera(-1.6f, 1.6f, -0.9f, 0.9f),m_CameraPos(0.0f)
+	ExampleLayer()                                                                                                                                                                                                                                      
+		: Layer("Example"),m_Camera(-1600.0f, 1600.0f, -900.0f, 900.0f),m_CameraPos(0.0f,0.0f,-10.0f),m_CameraRot(0.0f)
 	{
 		//3D Model Show
 		m_VertexArray = Ancestor::VertexArray::Create();
 
-		Ancestor::Ref<Ancestor::Object3D> obj = Ancestor::Object3D::Create("assets/models/test-nan.obj", "assets/materials", true);
+		Ancestor::Ref<Ancestor::Object3D> obj = Ancestor::Object3D::Create("assets/models/FinalBaseMesh.obj", "assets/materials", true);
 		std::vector<Ancestor::Ref<Ancestor::Model>> models = obj->GetModels();
 		std::vector<float> m_3DVertices = obj->GetVertices();
-		AC_TRACE("Vertices:");
-		for (size_t j = 0; j < m_3DVertices.size(); j++)
-		{
-			AC_TRACE(m_3DVertices[j]);
-		}
 
 		Ancestor::Ref<Ancestor::VertexBuffer> vertexBuffer;
 		AC_CORE_ASSERT(!m_3DVertices.empty(), "Vertices is NULL!");
 		vertexBuffer = Ancestor::VertexBuffer::Create(m_3DVertices.data(), m_3DVertices.size());
 
 		Ancestor::BufferLayout layout = {
-			{Ancestor::ShaderDataType::Float3 ,"a_Position" },
-			{Ancestor::ShaderDataType::Float4 ,"a_Color"}
+			{Ancestor::ShaderDataType::Float3 ,"a_Position" }
 		};
 		vertexBuffer->SetLayout(layout);
 		m_VertexArray->AddVertexBuffer(vertexBuffer);
 
 		Ancestor::Ref<Ancestor::IndexBuffer> indexBuffer;
-
+		uint32_t* modelIndices = (uint32_t*)malloc(1 * sizeof(uint32_t));
+		size_t size = 0;
 		for (size_t i = 0; i < models.size(); i++)
 		{
-			AC_TRACE("modelIndices:");
-			std::vector<unsigned int> vec = models[i]->GetVertexIndices();
-			for (size_t j = 0; j < vec.size(); j++)
+			modelIndices = (uint32_t *)realloc(modelIndices,models[i]->GetVertexIndices().size() * sizeof(uint32_t));
+			std::vector<uint32_t> data = models[i]->GetVertexIndices();
+			for (size_t i = size; i < size + data.size(); i++)
 			{
-				AC_TRACE(vec[j]);
+				*(modelIndices + i) = data[i];
 			}
-			m_VertexArray->AddIndexBuffer(vec.data(), vec.size());
+			size += models[i]->GetVertexIndices().size();
 		}
+		indexBuffer = Ancestor::IndexBuffer::Create(modelIndices, size);
+		m_VertexArray->SetIndexBuffer(indexBuffer);
 
-		std::string vertexSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) in vec3 a_Position;
-			layout(location = 1) in vec4 a_Color;
+		cubeVA = Ancestor::VertexArray::Create();
+		float cubeVertices[5*3] = {
+			-0.5f, -0.5f, -1.0f,
+			-0.5f,  0.5f, -1.0f,
+			 0.5f,  0.5f, -1.0f,
+			 0.5f, -0.5f, -1.0f,
+			 0.0f,  0.0f,  0.0f
+		};
+		Ancestor::Ref<Ancestor::VertexBuffer> cubeVB;
+		cubeVB = Ancestor::VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
 
-			uniform mat4 u_ViewProjection;
-			uniform mat4 u_Transform;
+		Ancestor::BufferLayout cubeLayout = {
+			{Ancestor::ShaderDataType::Float3 ,"a_Position" }
+		};
+		cubeVB->SetLayout(layout);
+		cubeVA->AddVertexBuffer(cubeVB);
+		Ancestor::Ref<Ancestor::IndexBuffer> cubeIB;
+		unsigned int cubeIndices[18] = {
+			0, 4, 1,
+			1, 4, 2,
+			2, 4, 3,
+			3, 4, 0,
+			0, 1, 3,
+			1, 3, 2 };
+		cubeIB = Ancestor::IndexBuffer::Create(cubeIndices, 18);
+		cubeVA->SetIndexBuffer(cubeIB);
 
-			out vec4 v_Color;
-
-			void main()
-			{
-				gl_Position = u_ViewProjection * u_Transform * vec4(a_Position,1.0);
-				v_Color = a_Color;
-			}
-		)";
-		std::string fragmentSrc = R"(
-			#version 330 core
-			
-			layout(location = 0) out vec4 color;
-
-			in vec4 v_Color;
-
-			void main()
-			{
-				color = v_Color;
-			}
-		)";
-
-		m_Shader = Ancestor::Shader::Create(vertexSrc, fragmentSrc);
+		m_Shader = Ancestor::Shader::Create("assets/shaders/3DModel.glsl");
 
 		m_Texture = Ancestor::Texture2D::Create("assets/textures/BlueNoise.png");
 		m_BlendingTestTexture = Ancestor::Texture2D::Create("assets/textures/twiceLogo.png");
 		textureShader = Ancestor::Shader::Create("assets/shaders/Texture.glsl");
+
+		float vertices[] = {
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
+
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
+		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
+		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
+		};
+		// world space positions of our cubes
+		glm::vec3 cubePositions[] = {
+			glm::vec3(0.0f,  0.0f,  0.0f),
+			glm::vec3(2.0f,  5.0f, -15.0f),
+			glm::vec3(-1.5f, -2.2f, -2.5f),
+			glm::vec3(-3.8f, -2.0f, -12.3f),
+			glm::vec3(2.4f, -0.4f, -3.5f),
+			glm::vec3(-1.7f,  3.0f, -7.5f),
+			glm::vec3(1.3f, -2.0f, -2.5f),
+			glm::vec3(1.5f,  2.0f, -2.5f),
+			glm::vec3(1.5f,  0.2f, -1.5f),
+			glm::vec3(-1.3f,  1.0f, -1.5f)
+		};
+		Test3DVA = Ancestor::VertexArray::Create();
+		Ancestor::Ref<Ancestor::VertexBuffer> Test3DVB = Ancestor::VertexBuffer::Create(vertices, sizeof(vertices));
+		Ancestor::BufferLayout test3DLayout = {
+			{Ancestor::ShaderDataType::Float3 ,"a_Pos" },
+			{Ancestor::ShaderDataType::Float2 ,"a_aTexCoord" }
+		};
+		Test3DVB->SetLayout(test3DLayout);
+		Test3DVA->AddVertexBuffer(Test3DVB);
+
+		Test3DTexture = Ancestor::Texture2D::Create("assets/textures/BlueNoise.png");
+		Test3DShader = Ancestor::Shader::Create("assets/shaders/3DTest.glsl");
 	}
 	void OnUpdate(Ancestor::Timestep ts) override
 	{
@@ -95,26 +157,56 @@ public:
 
 		if (Ancestor::Input::IsKeyPressed(AC_KEY_LEFT))
 		{
-			m_CameraPos.x -= m_CameraSpeed * ts;
+			m_CameraPos.x -= m_CameraMoveSpeed * ts;
 		}
 		if (Ancestor::Input::IsKeyPressed(AC_KEY_RIGHT))
 		{
-			m_CameraPos.x += m_CameraSpeed * ts;
+			m_CameraPos.x += m_CameraMoveSpeed * ts;
 		}
 		if (Ancestor::Input::IsKeyPressed(AC_KEY_UP))
 		{
-			m_CameraPos.y += m_CameraSpeed * ts;
+			m_CameraPos.y += m_CameraMoveSpeed * ts;
 		}
 		if (Ancestor::Input::IsKeyPressed(AC_KEY_DOWN))
 		{
-			m_CameraPos.y -= m_CameraSpeed * ts;
+			m_CameraPos.y -= m_CameraMoveSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_I))
+		{
+			m_CameraPos.z += m_CameraMoveSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_K))
+		{
+			m_CameraPos.z -= m_CameraMoveSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_Q))
+		{
+			m_CameraRot.z += m_CameraRotateSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_E))
+		{
+			m_CameraRot.z -= m_CameraRotateSpeed * ts;
+		}if (Ancestor::Input::IsKeyPressed(AC_KEY_W))
+		{
+			m_CameraRot.x += m_CameraRotateSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_S))
+		{
+			m_CameraRot.x -= m_CameraRotateSpeed * ts;
+		}if (Ancestor::Input::IsKeyPressed(AC_KEY_A))
+		{
+			m_CameraRot.y += m_CameraRotateSpeed * ts;
+		}
+		if (Ancestor::Input::IsKeyPressed(AC_KEY_D))
+		{
+			m_CameraRot.y -= m_CameraRotateSpeed * ts;
 		}
 		m_Camera.SetPosition(m_CameraPos);
+		m_Camera.SetRotation(m_CameraRot);
+		m_Camera.SetDireaction(glm::vec3(0.0f, 0.0f, -1.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 
-		Ancestor::RenderCommand::SetClearColor({ 0.1f, 0.1f, 0.1f, 1.0f });
+		Ancestor::RenderCommand::SetClearColor({ 0.1f, 0.4f, 0.7f, 1.0f });
 		Ancestor::RenderCommand::Clear();
-
-		m_Camera.SetRotation(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		Ancestor::Renderer::BeginScene(m_Camera);
 		//static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
@@ -128,13 +220,21 @@ public:
 
 		Ancestor::Renderer::Submit(m_VertexArray, m_Shader);
 
+		//Ancestor::Renderer::Submit(cubeVA, m_Shader);
+
+		//Test3DTexture->Bind(0);
+		//Test3DTexture->Bind(1);
+		//Ancestor::Renderer::Submit(Test3DVA, Test3DShader);
+
 		Ancestor::Renderer::EndScene();
 	}
 
 	virtual void OnImGuiRender() override
 	{
-		ImGui::Begin("Color Setting");
+		ImGui::Begin("Camera Setting");
 		ImGui::ColorEdit3("SquareColor", glm::value_ptr(m_SqColor));
+		ImGui::DragFloat3("CameraPos", glm::value_ptr(m_CameraPos), 1.0f ,-1000.0f, 1000.0f);
+		ImGui::DragFloat3("CameraRot", glm::value_ptr(m_CameraRot), 1.0f  ,-180.0f, 180.0f);
 		ImGui::End();
 	}
 
@@ -166,16 +266,23 @@ private:
 	Ancestor::Ref<Ancestor::Shader> m_Shader;
 	Ancestor::Ref<Ancestor::VertexArray> m_VertexArray;
 
-	Ancestor::Ref<Ancestor::Shader> squareShader;
-	Ancestor::Ref<Ancestor::VertexArray> squareVA;
+	Ancestor::Ref<Ancestor::Shader> cubeShader;
+	Ancestor::Ref<Ancestor::VertexArray> cubeVA;
+
+	Ancestor::Ref<Ancestor::Shader> Test3DShader;
+	Ancestor::Ref<Ancestor::VertexArray> Test3DVA;
+	Ancestor::Ref<Ancestor::Texture> Test3DTexture;
+
+	//Ancestor::Ref<Ancestor::Shader> squareShader;
+	//Ancestor::Ref<Ancestor::VertexArray> squareVA;
 
 	Ancestor::Ref<Ancestor::Texture> m_Texture;
 	Ancestor::Ref<Ancestor::Texture> m_BlendingTestTexture;
 	Ancestor::Ref<Ancestor::Shader> textureShader;
 
 	Ancestor::OrthographicCamera m_Camera;
-	glm::vec3 m_CameraPos;
-	float m_CameraSpeed = -3.0f;
+	glm::vec3 m_CameraPos, m_CameraRot;
+	float m_CameraMoveSpeed = 10.0f,m_CameraRotateSpeed = 30.0f;
 	bool m_IsDrag = false;
 	glm::vec3 m_SqColor = glm::vec3(0.8f,0.2f,0.2f);
 };

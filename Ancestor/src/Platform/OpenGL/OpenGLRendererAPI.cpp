@@ -6,7 +6,7 @@
 namespace Ancestor {
 	void OpenGLRendererAPI::Init()
 	{
-		glEnable(GL_BLEND);
+		glEnable(GL_BLEND | GL_DEPTH_TEST);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	}
 	void OpenGLRendererAPI::SetClearColor(const glm::vec4& color)
@@ -15,10 +15,14 @@ namespace Ancestor {
 	}
 	void OpenGLRendererAPI::Clear()
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
 	{
-		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		if(vertexArray->GetIndexBuffer() != nullptr)
+			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+		else
+			glDrawArrays(GL_TRIANGLES, 0, 36);
+		glBindVertexArray(0);
 	}
 }

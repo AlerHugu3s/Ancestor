@@ -12,7 +12,6 @@ namespace Ancestor {
 
 		virtual void AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer) = 0;
 		virtual void SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer) = 0;
-		virtual void AddIndexBuffer(uint32_t* indices, uint32_t size) = 0;
 		virtual const std::vector<Ref<VertexBuffer>>& GetVertexBuffers() const = 0;
 		virtual const Ref<IndexBuffer>& GetIndexBuffer() const = 0;
 
