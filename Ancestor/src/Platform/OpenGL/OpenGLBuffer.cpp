@@ -13,6 +13,13 @@ Ancestor::OpenGLVertexBuffer::OpenGLVertexBuffer(float* vertices, uint32_t size)
 	glBufferData(GL_ARRAY_BUFFER, size, vertices, GL_STATIC_DRAW);
 }
 
+Ancestor::OpenGLVertexBuffer::OpenGLVertexBuffer(std::vector<Vertex> vertices)
+{
+	glCreateBuffers(1, &m_RendererID);
+	glBindBuffer(GL_ARRAY_BUFFER, m_RendererID);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Vertex) , &vertices[0], GL_STATIC_DRAW);
+}
+
 Ancestor::OpenGLVertexBuffer::~OpenGLVertexBuffer()
 {
 	glDeleteBuffers(1, &m_RendererID);
@@ -36,7 +43,15 @@ Ancestor::OpenGLIndexBuffer::OpenGLIndexBuffer(uint32_t* indices, uint32_t count
 {
 	glCreateBuffers(1, &m_RendererID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
+}
+
+Ancestor::OpenGLIndexBuffer::OpenGLIndexBuffer(std::vector<uint32_t> indices)
+	: m_Count(indices.size())
+{
+	glCreateBuffers(1, &m_RendererID);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_RendererID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Count * sizeof(uint32_t), &indices[0], GL_STATIC_DRAW);
 }
 
 Ancestor::OpenGLIndexBuffer::~OpenGLIndexBuffer()

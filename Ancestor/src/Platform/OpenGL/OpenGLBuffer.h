@@ -7,6 +7,7 @@ namespace Ancestor {
 	{
 	public:
 		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		OpenGLVertexBuffer(std::vector<Vertex> vertices);
 
 		virtual ~OpenGLVertexBuffer() override;
 
@@ -23,6 +24,7 @@ namespace Ancestor {
 	{
 	public:
 		OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
+		OpenGLIndexBuffer(std::vector<uint32_t> indices);
 
 		virtual~OpenGLIndexBuffer() override;
 

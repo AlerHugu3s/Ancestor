@@ -1,9 +1,6 @@
 #pragma once
 
-#include "Ancestor/Core.h"
 #include "Layer.h"
-
-#include <vector>
 
 namespace Ancestor {
 	class ANCESTOR_API LayerStack {

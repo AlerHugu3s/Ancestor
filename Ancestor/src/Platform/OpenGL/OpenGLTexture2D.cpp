@@ -6,6 +6,7 @@
 namespace Ancestor {
 	OpenGLTexture2D::OpenGLTexture2D(const std::string& path)
 	{
+		m_Path = path;
 		int width, height,channels;
 
 		stbi_set_flip_vertically_on_load(1);
@@ -38,6 +39,10 @@ namespace Ancestor {
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		glDeleteTextures(1, &m_RendererId);
+	}
+	void OpenGLTexture2D::Active(uint32_t slot)
+	{
+		glActiveTexture(GL_TEXTURE0 + slot);
 	}
 	void OpenGLTexture2D::Bind(uint32_t slot)
 	{

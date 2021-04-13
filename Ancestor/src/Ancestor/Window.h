@@ -2,7 +2,6 @@
 
 #include "acpch.h"
 
-#include "Ancestor/Core.h"
 #include "Ancestor/Events/Event.h"
 #include "Ancestor/Log.h"
 

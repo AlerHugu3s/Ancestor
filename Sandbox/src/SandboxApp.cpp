@@ -13,139 +13,10 @@ public:
 	ExampleLayer()                                                                                                                                                                                                                                      
 		: Layer("Example"),m_Camera(-1600.0f, 1600.0f, -900.0f, 900.0f),m_CameraPos(0.0f,0.0f,-10.0f),m_CameraRot(0.0f)
 	{
-		//3D Model Show
-		m_VertexArray = Ancestor::VertexArray::Create();
+		
+		m_Model = std::make_shared<Ancestor::Model>("assets/shaders/models.obj");
+		m_Shader = Ancestor::Shader::Create("assets/shaders/OfficialExample.glsl");
 
-		Ancestor::Ref<Ancestor::Object3D> obj = Ancestor::Object3D::Create("assets/models/FinalBaseMesh.obj", "assets/materials", true);
-		std::vector<Ancestor::Ref<Ancestor::Model>> models = obj->GetModels();
-		std::vector<float> m_3DVertices = obj->GetVertices();
-
-		Ancestor::Ref<Ancestor::VertexBuffer> vertexBuffer;
-		AC_CORE_ASSERT(!m_3DVertices.empty(), "Vertices is NULL!");
-		vertexBuffer = Ancestor::VertexBuffer::Create(m_3DVertices.data(), m_3DVertices.size());
-
-		Ancestor::BufferLayout layout = {
-			{Ancestor::ShaderDataType::Float3 ,"a_Position" }
-		};
-		vertexBuffer->SetLayout(layout);
-		m_VertexArray->AddVertexBuffer(vertexBuffer);
-
-		Ancestor::Ref<Ancestor::IndexBuffer> indexBuffer;
-		uint32_t* modelIndices = (uint32_t*)malloc(1 * sizeof(uint32_t));
-		size_t size = 0;
-		for (size_t i = 0; i < models.size(); i++)
-		{
-			modelIndices = (uint32_t *)realloc(modelIndices,models[i]->GetVertexIndices().size() * sizeof(uint32_t));
-			std::vector<uint32_t> data = models[i]->GetVertexIndices();
-			for (size_t i = size; i < size + data.size(); i++)
-			{
-				*(modelIndices + i) = data[i];
-			}
-			size += models[i]->GetVertexIndices().size();
-		}
-		indexBuffer = Ancestor::IndexBuffer::Create(modelIndices, size);
-		m_VertexArray->SetIndexBuffer(indexBuffer);
-
-		cubeVA = Ancestor::VertexArray::Create();
-		float cubeVertices[5*3] = {
-			-0.5f, -0.5f, -1.0f,
-			-0.5f,  0.5f, -1.0f,
-			 0.5f,  0.5f, -1.0f,
-			 0.5f, -0.5f, -1.0f,
-			 0.0f,  0.0f,  0.0f
-		};
-		Ancestor::Ref<Ancestor::VertexBuffer> cubeVB;
-		cubeVB = Ancestor::VertexBuffer::Create(cubeVertices, sizeof(cubeVertices));
-
-		Ancestor::BufferLayout cubeLayout = {
-			{Ancestor::ShaderDataType::Float3 ,"a_Position" }
-		};
-		cubeVB->SetLayout(layout);
-		cubeVA->AddVertexBuffer(cubeVB);
-		Ancestor::Ref<Ancestor::IndexBuffer> cubeIB;
-		unsigned int cubeIndices[18] = {
-			0, 4, 1,
-			1, 4, 2,
-			2, 4, 3,
-			3, 4, 0,
-			0, 1, 3,
-			1, 3, 2 };
-		cubeIB = Ancestor::IndexBuffer::Create(cubeIndices, 18);
-		cubeVA->SetIndexBuffer(cubeIB);
-
-		m_Shader = Ancestor::Shader::Create("assets/shaders/3DModel.glsl");
-
-		m_Texture = Ancestor::Texture2D::Create("assets/textures/BlueNoise.png");
-		m_BlendingTestTexture = Ancestor::Texture2D::Create("assets/textures/twiceLogo.png");
-		textureShader = Ancestor::Shader::Create("assets/shaders/Texture.glsl");
-
-		float vertices[] = {
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-		 0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		 0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-		-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-		-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-		};
-		// world space positions of our cubes
-		glm::vec3 cubePositions[] = {
-			glm::vec3(0.0f,  0.0f,  0.0f),
-			glm::vec3(2.0f,  5.0f, -15.0f),
-			glm::vec3(-1.5f, -2.2f, -2.5f),
-			glm::vec3(-3.8f, -2.0f, -12.3f),
-			glm::vec3(2.4f, -0.4f, -3.5f),
-			glm::vec3(-1.7f,  3.0f, -7.5f),
-			glm::vec3(1.3f, -2.0f, -2.5f),
-			glm::vec3(1.5f,  2.0f, -2.5f),
-			glm::vec3(1.5f,  0.2f, -1.5f),
-			glm::vec3(-1.3f,  1.0f, -1.5f)
-		};
-		Test3DVA = Ancestor::VertexArray::Create();
-		Ancestor::Ref<Ancestor::VertexBuffer> Test3DVB = Ancestor::VertexBuffer::Create(vertices, sizeof(vertices));
-		Ancestor::BufferLayout test3DLayout = {
-			{Ancestor::ShaderDataType::Float3 ,"a_Pos" },
-			{Ancestor::ShaderDataType::Float2 ,"a_aTexCoord" }
-		};
-		Test3DVB->SetLayout(test3DLayout);
-		Test3DVA->AddVertexBuffer(Test3DVB);
-
-		Test3DTexture = Ancestor::Texture2D::Create("assets/textures/BlueNoise.png");
-		Test3DShader = Ancestor::Shader::Create("assets/shaders/3DTest.glsl");
 	}
 	void OnUpdate(Ancestor::Timestep ts) override
 	{
@@ -218,7 +89,8 @@ public:
 		//m_BlendingTestTexture->Bind(0);
 		//Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
-		Ancestor::Renderer::Submit(m_VertexArray, m_Shader);
+		m_Transform = glm::mat4(0);
+		//Ancestor::Renderer::Submit(m_Model, m_Shader,m_Transform);
 
 		//Ancestor::Renderer::Submit(cubeVA, m_Shader);
 
@@ -263,22 +135,10 @@ public:
 	}
 
 private:
+	Ancestor::Ref<Ancestor::Model> m_Model;
 	Ancestor::Ref<Ancestor::Shader> m_Shader;
-	Ancestor::Ref<Ancestor::VertexArray> m_VertexArray;
-
-	Ancestor::Ref<Ancestor::Shader> cubeShader;
-	Ancestor::Ref<Ancestor::VertexArray> cubeVA;
-
-	Ancestor::Ref<Ancestor::Shader> Test3DShader;
-	Ancestor::Ref<Ancestor::VertexArray> Test3DVA;
-	Ancestor::Ref<Ancestor::Texture> Test3DTexture;
-
-	//Ancestor::Ref<Ancestor::Shader> squareShader;
-	//Ancestor::Ref<Ancestor::VertexArray> squareVA;
-
 	Ancestor::Ref<Ancestor::Texture> m_Texture;
-	Ancestor::Ref<Ancestor::Texture> m_BlendingTestTexture;
-	Ancestor::Ref<Ancestor::Shader> textureShader;
+	glm::mat4 m_Transform;
 
 	Ancestor::OrthographicCamera m_Camera;
 	glm::vec3 m_CameraPos, m_CameraRot;

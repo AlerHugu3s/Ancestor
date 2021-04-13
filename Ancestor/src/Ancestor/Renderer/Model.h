@@ -1,37 +1,33 @@
 #pragma once
+
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 #include <glm/glm.hpp>
-#include "..\tinyobjloader\tinyobjloader.h"
+
+#include "Ancestor/Renderer/Mesh.h"
+
 namespace Ancestor {
-	struct Mesh
-	{
-		std::vector<glm::vec3> vertices;
-		std::vector<int> indices;
-		std::vector<glm::vec3> normals;
-		glm::vec2 texCoord;
-		glm::vec4 color;
-
-		Mesh()
-			: vertices(0),texCoord(0),normals(0),color(0)
-		{}
-	};
-
 	class Model
 	{
 	public:
-		Model(tinyobj::attrib_t attrib,tinyobj::shape_t shape);
-		virtual ~Model();
+		Model(const std::string& path, bool gamma = false);
+		void Draw(Ref<Shader> shader);
+		void AddTexture(Ref<Texture3D> texture);
 
-		std::vector<Mesh> GetMesh() { return meshData; }
-		std::vector<unsigned int> GetVertexIndices() { return m_VertexIndices; }
-		std::vector<unsigned int> GetNormalIndices() { return m_NormalIndices; }
-		std::vector<unsigned int> GetTexCoordIndices() { return m_TexCoordIndices; }
+	public:
 
-		static Ref<Model> Create(tinyobj::attrib_t attrib,tinyobj::shape_t shape);
+		// model data 
+		std::vector<Ref<Texture>> textures_loaded;	// stores all the textures loaded so far, optimization to make sure textures aren't loaded more than once.
+		std::vector<Ref<Mesh>> meshes;
+		std::string directory;
+		bool gammaCorrection;
+
 	private:
-		std::vector<Mesh> meshData;
-		int meshNum;
-		std::vector<unsigned int> m_VertexIndices;
-		std::vector<unsigned int> m_NormalIndices;
-		std::vector<unsigned int> m_TexCoordIndices;
+		void loadModel(const std::string& path);
+		void processNode(aiNode* node, const aiScene* scene);
+		Ref<Mesh> processMesh(aiMesh* mesh, const aiScene* scene);
+		std::vector<Ref<Texture>> loadMaterialTextures(aiMaterial* mat, aiTextureType type, std::string typeName);
 	};
 }

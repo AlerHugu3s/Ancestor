@@ -21,9 +21,9 @@ namespace Ancestor {
 			s_RendererAPI->Clear();
 		}
 
-		inline static void DrawIndexed(const Ref<VertexArray>& vertexArray)
+		inline static void DrawIndexed(Ref<Model> model, Ref<Shader> shader)
 		{
-			s_RendererAPI->DrawIndexed(vertexArray);
+			s_RendererAPI->DrawIndexed(model,shader);
 		}
 	private:
 		static RendererAPI* s_RendererAPI;

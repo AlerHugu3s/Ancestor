@@ -1,6 +1,20 @@
 #pragma once
+#include<glm/glm.hpp>
 
 namespace Ancestor {
+	struct Vertex {
+		// position
+		glm::vec3 Position;
+		// normal
+		glm::vec3 Normal;
+		// texCoords
+		glm::vec2 TexCoords;
+		// tangent
+		glm::vec3 Tangent;
+		// bitangent
+		glm::vec3 Bitangent;
+	};
+
 
 	enum class ShaderDataType
 	{
@@ -105,6 +119,7 @@ namespace Ancestor {
 		virtual void SetLayout(const BufferLayout& layout) = 0;
 
 		static Ref<VertexBuffer> Create(float* vertices, uint32_t  size);
+		static Ref<VertexBuffer> Create(std::vector<Vertex> vertices);
 	};
 
 	class IndexBuffer {
@@ -117,5 +132,6 @@ namespace Ancestor {
 		virtual uint32_t GetCount() const = 0;
 
 		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t  size);
+		static Ref<IndexBuffer> Create(std::vector<uint32_t> indices);
 	};
 }

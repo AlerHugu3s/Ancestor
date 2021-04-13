@@ -21,15 +21,11 @@
 // -------------Renderer------------
 #include "Ancestor/Renderer/Renderer.h"
 #include "Ancestor/Renderer/RenderCommand.h"
-
-#include "Ancestor/Renderer/Shader.h"
-#include "Ancestor/Renderer/Buffer.h"
-#include "Ancestor/Renderer/VertexArray.h"
-
 #include "Ancestor/Renderer/Camera.h"
+#include "Ancestor/Renderer/Shader.h"
 #include "Ancestor/Renderer/Texture.h"
+#include "Ancestor/Renderer/Model.h"
 
-#include "Ancestor/Renderer/Object3D.h"
 // ---------------------------------
 
 //-----------Entry Point------------------

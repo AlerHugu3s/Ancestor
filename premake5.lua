@@ -17,12 +17,13 @@ IncludeDir["Glad"] = "Ancestor/vendor/Glad/include"
 IncludeDir["ImGui"] = "Ancestor/vendor/imgui"
 IncludeDir["glm"] = "Ancestor/vendor/glm"
 IncludeDir["stb_image"] = "Ancestor/vendor/stb_image"
-IncludeDir["tinyobjloader"] = "Ancestor/vendor/tinyobjloader"
+IncludeDir["Assimp"] = "Ancestor/vendor/AssimpWithPremake/include"
 
 group "Dependencies"
     include "Ancestor/vendor/Glad"
     include "Ancestor/vendor/GLFW"
     include "Ancestor/vendor/imgui"
+	include "Ancestor/vendor/AssimpWithPremake"
 group ""
 
 project "Ancestor"
@@ -44,8 +45,6 @@ project "Ancestor"
         "%{prj.name}/src/**.cpp",
         "%{prj.name}/vendor/std_image/**.h",
         "%{prj.name}/vendor/std_image/**.cpp",
-        "%{prj.name}/vendor/tinyobjloader/**.h",
-        "%{prj.name}/vendor/tinyobjloader/**.cpp",
         "%{prj.name}/vendor/glm/glm/**.hpp",
         "%{prj.name}/vendor/glm/glm/**.inl"
     }
@@ -64,7 +63,7 @@ project "Ancestor"
         "%{IncludeDir.ImGui}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.tinyobjloader}"
+		"%{IncludeDir.Assimp}"
     }
 
     links
@@ -72,6 +71,7 @@ project "Ancestor"
         "GLFW",
         "Glad",
         "ImGui",
+		"Assimp",
         "opengl32.lib"
     }
 
@@ -126,6 +126,7 @@ project "Sandbox"
 
     links
     {
+		"Assimp",
         "Ancestor"
     }
 

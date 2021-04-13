@@ -17,12 +17,8 @@ namespace Ancestor {
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
+	void OpenGLRendererAPI::DrawIndexed(Ref<Model> model, Ref<Shader> shader)
 	{
-		if(vertexArray->GetIndexBuffer() != nullptr)
-			glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-		else
-			glDrawArrays(GL_TRIANGLES, 0, 36);
-		glBindVertexArray(0);
+		model->Draw(shader);
 	}
 }

@@ -10,3 +10,6 @@
 [submodule "GLFW"]
 	path = Ancestor/vendor/GLFW
 	url = https://github.com/TheCherno/GLFW/
+[submodule "Ancestor/vendor/AssimpWithPremake"]
+	path = Ancestor/vendor/AssimpWithPremake
+	url = https://github.com/AminAliari/assimp

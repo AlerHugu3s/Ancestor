@@ -1,12 +1,11 @@
 #pragma once
 
-#include "Core.h"
 #include "Window.h"
 
 #include "Ancestor/Events/ApplicationEvent.h"
 #include "Ancestor/Events/MouseEvent.h"
 #include "Ancestor/LayerStack.h"
-#include "Ancestor/Events/Event.h"
+
 
 #include "ImGui/ImGuiLayer.h"
 

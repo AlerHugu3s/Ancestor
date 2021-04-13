@@ -61,10 +61,13 @@ namespace Ancestor {
 		}
 
 		m_VertexBuffers.push_back(vertexBuffer);
+		glBindVertexArray(0);
 	}
 	void OpenGLVertexArray::SetIndexBuffer(const Ref<IndexBuffer>& indexBuffer)
 	{
+		glBindVertexArray(m_RendererID);
 		indexBuffer->Bind();
 		m_IndexBuffer = indexBuffer;
+		glBindVertexArray(0);
 	}
 }
