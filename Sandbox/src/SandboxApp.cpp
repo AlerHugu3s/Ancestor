@@ -13,10 +13,8 @@ public:
 	ExampleLayer()                                                                                                                                                                                                                                      
 		: Layer("Example"),m_Camera(-1600.0f, 1600.0f, -900.0f, 900.0f),m_CameraPos(0.0f,0.0f,-10.0f),m_CameraRot(0.0f)
 	{
-		
-		m_Model = std::make_shared<Ancestor::Model>("assets/shaders/models.obj");
 		m_Shader = Ancestor::Shader::Create("assets/shaders/OfficialExample.glsl");
-
+		m_Model = std::make_shared<Ancestor::Model>("assets/models/backpack.obj");
 	}
 	void OnUpdate(Ancestor::Timestep ts) override
 	{
@@ -80,23 +78,14 @@ public:
 		Ancestor::RenderCommand::Clear();
 
 		Ancestor::Renderer::BeginScene(m_Camera);
-		//static glm::mat4 scale = glm::scale(glm::mat4(1.0f), glm::vec3(0.1f));
 
 		//std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->Bind();
 		//std::dynamic_pointer_cast<Ancestor::OpenGLShader>(squareShader)->UploadUniformFloat3("u_Color", m_SqColor);
 		//m_Texture->Bind(0);
 		//Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
-		//m_BlendingTestTexture->Bind(0);
-		//Ancestor::Renderer::Submit(squareVA, textureShader, glm::scale(glm::mat4(1.0f), glm::vec3(1.5f)));
 
 		m_Transform = glm::mat4(0);
-		//Ancestor::Renderer::Submit(m_Model, m_Shader,m_Transform);
-
-		//Ancestor::Renderer::Submit(cubeVA, m_Shader);
-
-		//Test3DTexture->Bind(0);
-		//Test3DTexture->Bind(1);
-		//Ancestor::Renderer::Submit(Test3DVA, Test3DShader);
+		Ancestor::Renderer::Submit(m_Model, m_Shader,m_Transform);
 
 		Ancestor::Renderer::EndScene();
 	}

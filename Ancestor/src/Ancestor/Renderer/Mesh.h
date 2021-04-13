@@ -3,7 +3,6 @@
 #include "Ancestor/Renderer/Texture.h"
 #include "Ancestor/Renderer/Shader.h"
 #include "Ancestor/Renderer/Buffer.h"
-#include "Ancestor/Renderer/VertexArray.h"
 
 namespace Ancestor {
 	class Mesh

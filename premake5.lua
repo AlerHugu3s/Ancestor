@@ -119,6 +119,7 @@ project "Sandbox"
     includedirs
     {
         "Ancestor/vendor/spdlog/include",
+        "Ancestor/vendor/AssimpWithPremake/include",
         "Ancestor/src",
         "Ancestor/vendor",
         "%{IncludeDir.glm}"
