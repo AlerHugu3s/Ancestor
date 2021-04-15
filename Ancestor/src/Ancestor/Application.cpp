@@ -67,6 +67,7 @@ namespace Ancestor {
 	{
 		EventDispatcher dispatcher(e);
 		dispatcher.Dispatch<WindowCloseEvent>(AC_BIND_EVENT_FN(Application::OnWindowClose));
+		dispatcher.Dispatch<WindowResizeEvent>(AC_BIND_EVENT_FN(Application::OnWindowResize));
 
 		for (auto it = m_LayerStack.end();it!=m_LayerStack.begin();)
 		{
@@ -78,6 +79,12 @@ namespace Ancestor {
 	bool Application::OnWindowClose(WindowCloseEvent& e)
 	{
 		m_Running = false;
+		return true;
+	}
+
+	bool Application::OnWindowResize(WindowResizeEvent& e)
+	{
+		glViewport(0, 0, e.GetWidth(), e.GetHeight());
 		return true;
 	}
 }

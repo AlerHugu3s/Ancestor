@@ -10,9 +10,6 @@ namespace Ancestor {
 		virtual void Draw(Ref<Shader> shader) override;
 
 	public:
-		std::vector<Vertex> vertices;
-		std::vector<unsigned int> indices;
-		std::vector<Ref<Texture>> textures;
 		Ref<VertexArray> VAO;
 
 	private:
@@ -22,5 +19,8 @@ namespace Ancestor {
 		// render data 
 		Ref<VertexBuffer> VBO;
 		Ref<IndexBuffer> IBO;
+		std::vector<Ref<Texture>> m_Textures;
+		std::vector<unsigned int> m_Indices;
+		std::vector<Vertex> m_vertices;
 	};
 }

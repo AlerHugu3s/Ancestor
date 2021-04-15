@@ -20,6 +20,6 @@ namespace Ancestor {
 	private:
 		std::string m_Path,m_Type;
 		uint32_t m_RendererId;
-		uint32_t m_Width, m_Height, m_Depth;
+		uint32_t m_Width, m_Height;
 	};
 }

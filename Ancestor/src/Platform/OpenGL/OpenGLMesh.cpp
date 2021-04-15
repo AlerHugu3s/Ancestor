@@ -7,10 +7,12 @@ namespace Ancestor {
 	// constructor
 	OpenGLMesh::OpenGLMesh(std::vector<Vertex> vertices, std::vector<unsigned int> indices, std::vector<Ref<Texture>> textures)
 	{
+		m_Indices = indices;
+		m_vertices = vertices;
+		m_Textures = textures;
 		VAO = VertexArray::Create();
-		VBO = VertexBuffer::Create(vertices);
-		IBO = IndexBuffer::Create(indices);
-		this->textures = textures;
+		VBO = VertexBuffer::Create(m_vertices);
+		IBO = IndexBuffer::Create(m_Indices);
 
 		// now that we have all the required data, set the vertex buffers and its attribute pointers.
 		setupMesh();
@@ -24,13 +26,14 @@ namespace Ancestor {
 		unsigned int specularNr = 1;
 		unsigned int normalNr = 1;
 		unsigned int heightNr = 1;
-		for (unsigned int i = 0; i < textures.size(); i++)
+		unsigned int customNr = 1;
+		for (unsigned int i = 0; i < m_Textures.size(); i++)
 		{
 			// active proper texture unit before binding
-			textures[i]->Active(i);
+			m_Textures[i]->Active(i);
 			// retrieve texture number (the N in diffuse_textureN)
 			std::string number;
-			std::string name = textures[i]->GetType();
+			std::string name = m_Textures[i]->GetType();
 			if (name == "texture_diffuse")
 				number = std::to_string(diffuseNr++);
 			else if (name == "texture_specular")
@@ -39,21 +42,19 @@ namespace Ancestor {
 				number = std::to_string(normalNr++); // transfer unsigned int to stream
 			else if (name == "texture_height")
 				number = std::to_string(heightNr++); // transfer unsigned int to stream
-
-			// now set the sampler to the correct texture unit
+			else
+				number = std::to_string(customNr++); // transfer unsigned int to stream
+			m_Textures[i]->Bind();
 			std::dynamic_pointer_cast<OpenGLShader>(shader)->UploadUniformInt1(name + number, i);
-
-			// and finally bind the texture
-			textures[i]->Bind();
-
-			// draw mesh
-			VAO->Bind();
-			glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-			VAO->UnBind();
-
-			// always good practice to set everything back to defaults once configured.
-			textures[i]->Active(0);
 		}
+
+		// draw mesh
+		VAO->Bind();
+		glDrawElements(GL_TRIANGLES, m_Indices.size(), GL_UNSIGNED_INT, 0);
+		VAO->UnBind();
+
+		// always good practice to set everything back to defaults once configured.
+		//glActiveTexture(GL_TEXTURE0);
 	}
 
 	// initializes all the buffer objects/arrays
