@@ -14,7 +14,6 @@ public:
 		: Layer("Example"),m_Camera(-1600.0f, 1600.0f, -900.0f, 900.0f),m_CameraPos(0.0f,0.0f,10.0f)
 	{
 		m_Shader = Ancestor::Shader::Create("assets/shaders/OfficialExample.glsl");
-		//m_Model = std::make_shared<Ancestor::Model>("C:/Users/xiasm/Desktop/Ancestor/Sandbox/assets/models/backpack.obj");
 		projPath = std::filesystem::current_path();
 		if(m_ObjPath != "none")
 			m_Model = std::make_shared<Ancestor::Model>(m_ObjPath);
@@ -65,16 +64,17 @@ public:
 			}
 		}
 
-		
-
 		Ancestor::RenderCommand::SetClearColor({ 0.1f, 0.4f, 0.7f, 1.0f });
 		Ancestor::RenderCommand::Clear();
 
 		Ancestor::Renderer::BeginScene(m_Camera);
 
 		m_Transform = glm::mat4(1.0f);
-		m_Transform = glm::translate(m_Transform, glm::vec3(0.0f, 0.0f, 0.0f));
-		m_Transform = glm::scale(m_Transform, glm::vec3(1.0f, 1.0f, 1.0f));
+		m_Transform = glm::translate(m_Transform, m_Translate);
+		m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.x), glm::vec3(1, 0, 0));
+		m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.y), glm::vec3(0, 1, 0));
+		m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.z), glm::vec3(0, 0, 1));
+		m_Transform = glm::scale(m_Transform, m_Scale);
 		
 		if (m_ObjPath != "none")
 		{
@@ -105,10 +105,10 @@ public:
 			ImGui::EndMainMenuBar();
 		}
 
-		ImGui::Begin("Camera Setting");
-		ImGui::DragFloat3("CameraPos", glm::value_ptr(m_CameraPos), 1.0f ,-1000.0f, 1000.0f);
-		ImGui::DragFloat("CamerYAW", &m_CameraYaw, 1.0f  ,-180.0f, 180.0f);
-		ImGui::DragFloat("CamerPitch", &m_CameraPitch, 1.0f, -180.0f, 180.0f);
+		ImGui::Begin("Model Setting");
+		ImGui::DragFloat3("ModelPos", glm::value_ptr(m_Translate), 0.1f ,-1000.0f, 1000.0f);
+		ImGui::DragFloat3("ModelScale", glm::value_ptr(m_Scale), 0.1f, 0.01f, 1000.0f);
+		ImGui::DragFloat3("ModelRotation", glm::value_ptr(m_Rotation), 1.0f, -10000.0f, 10000.0f);
 		ImGui::End();
 	}
 
@@ -168,11 +168,14 @@ private:
 	Ancestor::Ref<Ancestor::Shader> m_Shader;
 	Ancestor::Ref<Ancestor::Texture> m_Texture;
 	glm::mat4 m_Transform;
+	glm::vec3 m_Translate = glm::vec3(0, 0, 0);
+	glm::vec3 m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
+	glm::vec3 m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
 	Ancestor::PerspectiveCamera m_Camera;
 	glm::vec3 m_CameraPos;
 	float m_CameraYaw = -90.0f, m_CameraPitch = 0.0f;
-	float m_CameraMoveSpeed = 10.0f,m_CameraRotateSpeed = 30.0f, m_CameraZoom = 45.0f;
+	float m_CameraMoveSpeed = 10.0f, m_CameraRotateSpeed = 30.0f, m_CameraZoom = 45.0f;
 	bool m_IsDrag = false;
 
 	float lastX, lastY;

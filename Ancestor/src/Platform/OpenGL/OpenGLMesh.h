@@ -1,6 +1,5 @@
 #pragma once
 #include "Ancestor/Renderer/Mesh.h"
-#include "Ancestor/Renderer/VertexArray.h"
 
 namespace Ancestor {
 	class OpenGLMesh : public Mesh

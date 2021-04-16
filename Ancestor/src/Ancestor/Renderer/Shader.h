@@ -13,7 +13,5 @@ namespace Ancestor {
 
 		static Ref<Shader> Create(const std::string& vertexSrc,const std::string& fragmentSrc);
 		static Ref<Shader> Create(const std::string& path);
-	private:
-		uint32_t m_RendererId;
 	};
 }

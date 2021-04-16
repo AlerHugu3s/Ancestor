@@ -8,10 +8,6 @@
 
 
 #include "ImGui/ImGuiLayer.h"
-
-
-
-
 namespace Ancestor {
 	struct Color
 	{
