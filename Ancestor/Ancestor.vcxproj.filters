@@ -1408,6 +1408,7 @@
       <Filter>vendor\glm\glm</Filter>
     </ClInclude>
     <ClInclude Include="vendor\stb_image\stb_image.h" />
+    <ClInclude Include="src\Ancestor\OrthographicCameraController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Ancestor\Application.cpp">
@@ -1492,5 +1493,6 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp" />
+    <ClCompile Include="src\Ancestor\OrthographicCameraController.cpp" />
   </ItemGroup>
 </Project>

@@ -13,7 +13,11 @@ namespace Ancestor {
 	}
 	void Renderer::BeginScene(PerspectiveCamera& camera)
 	{
-		m_SceneData->ViewProjectMatrix = camera.GetViewPorjectionMartix();
+		m_SceneData->ViewProjectMatrix = camera.GetViewProjectionMartix();
+	}
+	void Renderer::BeginScene(OrthographicCamera& camera)
+	{
+		m_SceneData->ViewProjectMatrix = camera.GetViewProjectionMatrix();
 	}
 	void Renderer::EndScene()
 	{
