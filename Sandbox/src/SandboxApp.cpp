@@ -1,4 +1,4 @@
- #include <Ancestor.h>
+#include <Ancestor.h>
 #include "imgui/imgui.h"
 
 #include "Platform/OpenGL/OpenGLShader.h"
@@ -11,7 +11,7 @@ class ExampleLayer : public Ancestor::Layer
 {
 public:
 	ExampleLayer()
-		: Layer("Example"),/*m_Camera(-1600.0f, 1600.0f, -900.0f, 900.0f),m_CameraPos(0.0f,0.0f,10.0f)*/m_OrthographicCameraController(16.0f/9.0f,true)
+		: Layer("Example"),m_Camera(-1600.0f, 1600.0f, -900.0f, 900.0f),m_CameraPos(0.0f,0.0f,10.0f)
 	{
 		m_Shader = Ancestor::Shader::Create("assets/shaders/OfficialExample.glsl");
 		projPath = std::filesystem::current_path();
@@ -37,7 +37,7 @@ public:
 			lastX = xPos;
 			lastY = yPos;
 
-			/*m_Camera.ProcessMouseMovement(xOffset, yOffset);
+			m_Camera.ProcessMouseMovement(xOffset, yOffset);
 			if (Ancestor::Input::IsKeyPressed(AC_KEY_LEFT) || Ancestor::Input::IsKeyPressed(AC_KEY_A))
 			{
 				m_Camera.ProcessKeyboard(Ancestor::CameraMovement::LEFT, ts);
@@ -61,23 +61,20 @@ public:
 			if (Ancestor::Input::IsKeyPressed(AC_KEY_LEFT_CONTROL))
 			{
 				m_Camera.ProcessKeyboard(Ancestor::CameraMovement::DOWNWARD, ts);
-			}*/
+			}
 		}
-
-		m_OrthographicCameraController.OnUpdate(ts);
 
 		Ancestor::RenderCommand::SetClearColor({ 0.1f, 0.4f, 0.7f, 1.0f });
 		Ancestor::RenderCommand::Clear();
 
-		//Ancestor::Renderer::BeginScene(m_Camera);
-		Ancestor::Renderer::BeginScene(m_OrthographicCameraController.GetCamera());
+		Ancestor::Renderer::BeginScene(m_Camera);
 
 		m_Transform = glm::mat4(1.0f);
-		m_Transform = translate(m_Transform, m_Translate);
-		m_Transform = rotate(m_Transform, glm::radians(m_Rotation.x), glm::vec3(1, 0, 0));
-		m_Transform = rotate(m_Transform, glm::radians(m_Rotation.y), glm::vec3(0, 1, 0));
-		m_Transform = rotate(m_Transform, glm::radians(m_Rotation.z), glm::vec3(0, 0, 1));
-		m_Transform = scale(m_Transform, m_Scale);
+		m_Transform = glm::translate(m_Transform, m_Translate);
+		m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.x), glm::vec3(1, 0, 0));
+		m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.y), glm::vec3(0, 1, 0));
+		m_Transform = glm::rotate(m_Transform, glm::radians(m_Rotation.z), glm::vec3(0, 0, 1));
+		m_Transform = glm::scale(m_Transform, m_Scale);
 		
 		if (m_ObjPath != "none")
 		{
@@ -117,8 +114,6 @@ public:
 
 	void OnEvent(Ancestor::Event& event) override
 	{
-		m_OrthographicCameraController.OnEvent(event);
-
 		Ancestor::EventDispatcher dispatcher(event);
 		dispatcher.Dispatch<Ancestor::MouseButtonPressedEvent>(AC_BIND_EVENT_FN(ExampleLayer::OnMouseButtonPressedEvent));
 		dispatcher.Dispatch<Ancestor::MouseButtonReleasedEvent>(AC_BIND_EVENT_FN(ExampleLayer::OnMouseButtonReleasedEvent));
@@ -177,11 +172,10 @@ private:
 	glm::vec3 m_Scale = glm::vec3(1.0f, 1.0f, 1.0f);
 	glm::vec3 m_Rotation = glm::vec3(0.0f, 0.0f, 0.0f);
 
-	//Ancestor::PerspectiveCamera m_Camera;
-	Ancestor::OrthographicCameraController m_OrthographicCameraController;
-	/*glm::vec3 m_CameraPos;
+	Ancestor::PerspectiveCamera m_Camera;
+	glm::vec3 m_CameraPos;
 	float m_CameraYaw = -90.0f, m_CameraPitch = 0.0f;
-	float m_CameraMoveSpeed = 10.0f, m_CameraRotateSpeed = 30.0f, m_CameraZoom = 45.0f;*/
+	float m_CameraMoveSpeed = 10.0f, m_CameraRotateSpeed = 30.0f, m_CameraZoom = 45.0f;
 	bool m_IsDrag = false;
 
 	float lastX, lastY;
